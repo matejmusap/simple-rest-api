@@ -1,3 +1,4 @@
+import bodyParser from 'body-parser';
 import express, { Router } from 'express';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import swaggerUi from 'swagger-ui-express';
@@ -65,6 +66,10 @@ const port = process.env.PORT || 3000;
 const documentation = generateDocumentation(paths);
 
 const router = Router();
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(router);
 
@@ -74,8 +79,12 @@ router.get('/swagger', (_req, res) =>
   res.send(JSON.stringify(documentation, null, 2))
 );
 
+router.get('/', (_req, res, _next) => {
+  res.redirect('/login!');
+});
+
 router.get('/login', (_req, res, _next) => {
-  res.send('Hello world!');
+  res.render('login');
 });
 
 app.listen(port, () => {
