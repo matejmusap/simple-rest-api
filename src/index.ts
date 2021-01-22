@@ -1,46 +1,13 @@
 import bodyParser from 'body-parser';
 import express, { Router } from 'express';
-import { DataTypes, Model, Sequelize } from 'sequelize';
 import swaggerUi from 'swagger-ui-express';
+import sequelize from './utils/sequelize';
 import { generateDocumentation } from './swagger';
+import { error404, error500, handle } from './utils/handlers';
 
 require('dotenv').config();
 
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'test',
-  username: process.env.DB_USERNAME || '',
-  password: process.env.DB_PASSWORD || ''
-});
-
-class User extends Model {}
-
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
-    },
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false
-    }
-  },
-  {
-    sequelize,
-    paranoid: true,
-    modelName: 'user'
-  }
-);
-
-sequelize.sync({ logging: false });
+(async () => await sequelize.sync({ logging: false }))();
 
 const getPaths = {
   summary: 'Get',
@@ -54,7 +21,16 @@ const getPaths = {
 };
 
 const paths = {
+  '/': {
+    get: getPaths
+  },
   '/login': {
+    get: getPaths
+  },
+  '/register': {
+    get: getPaths
+  },
+  '/forgot': {
     get: getPaths
   }
 };
@@ -72,6 +48,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(router);
+app.use(error404);
+app.use(error500);
 
 router.use('/', swaggerUi.serve);
 router.get('/api-docs', swaggerUi.setup(documentation));
@@ -79,13 +57,33 @@ router.get('/swagger', (_req, res) =>
   res.send(JSON.stringify(documentation, null, 2))
 );
 
-router.get('/', (_req, res, _next) => {
-  res.redirect('/login!');
-});
+router.get(
+  '/',
+  handle((_req, res, _next) => {
+    res.redirect('main!');
+  })
+);
 
-router.get('/login', (_req, res, _next) => {
-  res.render('login');
-});
+router.get(
+  '/login',
+  handle((_req, res, _next) => {
+    res.render('login');
+  })
+);
+
+router.get(
+  '/register',
+  handle((_req, res, _next) => {
+    res.render('register');
+  })
+);
+
+router.get(
+  '/forgot',
+  handle((_req, res, _next) => {
+    res.render('forgot');
+  })
+);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
