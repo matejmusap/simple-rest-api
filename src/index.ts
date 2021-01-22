@@ -1,8 +1,45 @@
 import express, { Router } from 'express';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import swaggerUi from 'swagger-ui-express';
 import { generateDocumentation } from './swagger';
 
 require('dotenv').config();
+
+const sequelize = new Sequelize({
+  dialect: 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_NAME || 'test',
+  username: process.env.DB_USERNAME || '',
+  password: process.env.DB_PASSWORD || ''
+});
+
+class User extends Model {}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+  },
+  {
+    sequelize,
+    paranoid: true,
+    modelName: 'user'
+  }
+);
+
+sequelize.sync({ logging: false });
 
 const getPaths = {
   summary: 'Get',
