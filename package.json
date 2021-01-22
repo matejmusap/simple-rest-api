@@ -1,0 +1,22 @@
+{
+  "name": "post-app",
+  "version": "1.0.0",
+  "description": "Simple REST API",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matejmusap/simple-rest-api.git"
+  },
+  "keywords": [
+    "rest-api"
+  ],
+  "author": "Matej Musap",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matejmusap/simple-rest-api/issues"
+  },
+  "homepage": "https://github.com/matejmusap/simple-rest-api#readme"
+}
