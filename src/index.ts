@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import sequilazeInit from './models';
-import { error404, error500 } from './utils/handlers';
+import { error404, error500 } from './utils/errorsHandlers';
 import router from './routes';
 
 require('dotenv').config();

@@ -1,23 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
-import { badRequest } from '../utils/handlers';
 import { User } from '../models';
+import argon2 from 'argon2';
+
+interface UserRegister {
+  email: string;
+  username: string;
+  password: string;
+  admin: boolean;
+}
 
 export default async function handlePostRegisterUser(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const password = req.body.password;
+  const body: UserRegister = req.body;
 
-  if (req.body.id) badRequest(req, res, 'Id should not be provided!');
-  if (!req.body.email) badRequest(req, res, 'Email should be provided!');
-  if (!req.body.username) badRequest(req, res, 'Username should be provided!');
+  const password = await argon2.hash(body.password);
 
   const user = User.build({
-    email: req.body.email,
-    username: req.body.username,
+    email: body.email,
+    username: body.username,
     password: password,
-    admin: req.body.admin
+    admin: body.admin
   });
   await user.save();
   res.redirect('/');
