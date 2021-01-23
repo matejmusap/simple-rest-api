@@ -8,7 +8,7 @@ export default function hanldeGetMain(
   res.render('main');
 }
 
-export const paths = {
+export const swaggerPaths = {
   summary: 'Get',
   produces: ['application/json'],
   responses: {

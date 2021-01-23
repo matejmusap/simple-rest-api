@@ -7,7 +7,7 @@ export default function hanldeGetLogin(
 ) {
   res.render('login');
 }
-export const paths = {
+export const swaggerPaths = {
   summary: 'Get',
   produces: ['application/json'],
   responses: {

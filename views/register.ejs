@@ -1,6 +1,31 @@
-<form>
-  <input type="email" placeholder="your email">
-  <input type="username" placeholder="username">
-  <input type="password" placeholder="password">
-  <input type="submit" value="Register">
+<%- include('./partials/header') %>
+
+<form id="body" action="/user" method="POST">
+  <div class="mb-3">
+    <label for="email" class="form-label">Email address *</label>
+    <input required type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="username" class="form-label">Username *</label>
+    <input pattern=".{3,15}" type="text" class="form-control" id="username" name="username" required >
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password *</label>
+    <input type="password" class="form-control" id="password" name="password" required>
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="admin" name="admin">
+    <label class="form-check-label" for="admin">Admin: </label>
+  </div>
+  <button type="submit" class="btn btn-primary">Register</button>
+  <div class="row">
+    <a href="/">Go Back</a>
+  </div>
+  <div class="row">
+      <div class="form-group">
+          <p><strong>*</strong> indicates a required field.</p>
+      </div>
+  </div>
 </form>
+
+<%- include('./partials/footer') %>

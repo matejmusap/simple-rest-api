@@ -8,7 +8,7 @@ export default function handleGetRegister(
   res.render('register');
 }
 
-export const paths = {
+export const swaggerPaths = {
   summary: 'Get',
   produces: ['application/json'],
   responses: {

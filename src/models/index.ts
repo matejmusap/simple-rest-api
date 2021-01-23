@@ -15,7 +15,7 @@ export const User = sequelize.define(UserModel.table, UserModel.Scheme, {
   ...UserModel.options
 }) as ModelCtor<Model<any, any>>;
 
-const sequilazeInit = () => sequelize.sync({ logging: false });
+const sequilazeInit = () => sequelize.sync({ force: false, logging: false });
 
 export { UserModel };
 
