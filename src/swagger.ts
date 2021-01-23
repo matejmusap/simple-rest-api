@@ -1,9 +1,7 @@
-export const definitions = {};
+const definitions = {};
 
-const ip = `${process.env.IP}` || 'localhost';
 const port = process.env.PORT || 3000;
-
-const baseUrl = `http://${ip}:${port}`;
+const ip = process.env.IP || 'localhost';
 
 export function generateDocumentation(paths: any) {
   return {
@@ -15,6 +13,12 @@ export function generateDocumentation(paths: any) {
       this['_swagger'] = value;
     },
     schemes: ['https'],
+    info: {
+      contact: {
+        name: 'Briteback support',
+        email: 'developer@briteback.com'
+      }
+    },
     securityDefinitions: {
       basicAuth: {
         type: 'basic'
@@ -25,8 +29,8 @@ export function generateDocumentation(paths: any) {
         basicAuth: []
       }
     ],
-    host: baseUrl,
-    basePath: '/',
+    host: `http://${ip}:${port}`,
+    basePath: '/api/routings',
     paths,
     definitions,
     parameters: {}

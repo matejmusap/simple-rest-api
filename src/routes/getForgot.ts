@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 
-export default function handleGetRegister(
+export default function hanldeForgotLogin(
   _req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  res.render('register');
+  res.render('forgot');
 }
 
-export const paths = {
+export const swaggerPaths = {
   summary: 'Get',
   produces: ['application/json'],
   responses: {

@@ -1,7 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
 
-function hanldeGetMain(_req: Request, res: Response, _next: NextFunction) {
+export default function hanldeGetMain(
+  _req: Request,
+  res: Response,
+  _next: NextFunction
+) {
   res.render('main');
 }
 
-export default hanldeGetMain;
+export const paths = {
+  summary: 'Get',
+  produces: ['application/json'],
+  responses: {
+    200: { description: 'OK' },
+    400: { description: 'Bad request.' },
+    404: { description: 'Requested resource not found' },
+    500: { description: 'Internal server error' }
+  }
+};

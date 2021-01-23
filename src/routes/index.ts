@@ -2,59 +2,41 @@ import { Router } from 'express';
 import { handle } from '../utils/handlers';
 import swaggerUi from 'swagger-ui-express';
 import { generateDocumentation } from '../swagger';
-import hanldeGetLogin from './getLogin';
-import hanldeGetMain from './getMain';
-import handleGetRegister from './getRegister';
-
-const router = Router();
-
-const getPaths = {
-  summary: 'Get',
-  produces: ['application/json'],
-  responses: {
-    200: { description: 'OK' },
-    400: { description: 'Bad request.' },
-    404: { description: 'Requested resource not found' },
-    500: { description: 'Internal server error' }
-  }
-};
+import hanldeGetMain, { swaggerPaths as getMainPaths } from './getMain';
+import hanldeGetLogin, { swaggerPaths as getLoginPaths } from './getLogin';
+import handleGetRegister, {
+  swaggerPaths as getRegisterPaths
+} from './getRegister';
+import handleGetForgot, { swaggerPaths as getForgotPaths } from './getRegister';
 
 const paths = {
   '/': {
-    get: getPaths
+    get: getMainPaths
   },
   '/login': {
-    get: getPaths
+    get: getLoginPaths
   },
   '/register': {
-    get: getPaths
+    get: getRegisterPaths
   },
   '/forgot': {
-    get: getPaths
+    get: getForgotPaths
   }
 };
+
+const router = Router();
 
 const documentation = generateDocumentation(paths);
 
 router.use('/', swaggerUi.serve);
 router.get('/api-docs', swaggerUi.setup(documentation));
-
-router.get(
-  '/swagger',
-  handle((_req, res) => res.send(JSON.stringify(documentation, null, 2)))
-);
+router.get('/swagger', (_req: any, res: any) => {
+  return res.send(JSON.stringify(documentation, null, 2));
+});
 
 router.get('/', handle(hanldeGetMain));
-
 router.get('/login', handle(hanldeGetLogin));
-
 router.get('/register', handle(handleGetRegister));
-
-router.get(
-  '/forgot',
-  handle((_req, res, _next) => {
-    res.render('forgot');
-  })
-);
+router.get('/forgot', handle(handleGetForgot));
 
 export default router;
