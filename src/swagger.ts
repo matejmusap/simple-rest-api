@@ -30,7 +30,7 @@ export function generateDocumentation(paths: any) {
       }
     ],
     host: `http://${ip}:${port}`,
-    basePath: '/api/routings',
+    basePath: '/',
     paths,
     definitions,
     parameters: {}

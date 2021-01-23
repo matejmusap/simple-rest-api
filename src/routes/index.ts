@@ -8,15 +8,7 @@ import handleGetRegister, {
   swaggerPaths as getRegisterPaths
 } from './getRegister';
 import handleGetForgot, { swaggerPaths as getForgotPaths } from './getRegister';
-import handlePostRegisterUser, {
-  swaggerPaths as postRegisterUserPaths
-} from './postRegisterUser';
-import handlePostLoginUser, {
-  swaggerPaths as postLoginUserPaths
-} from './postLoginUser';
-import handleGetUserHomepage, {
-  swaggerPaths as getUserHomepagePaths
-} from './getUserHomepage';
+import user, { swaggerPaths as userPaths } from './user';
 
 const paths = {
   '/': {
@@ -31,18 +23,12 @@ const paths = {
   '/forgot': {
     get: getForgotPaths
   },
-  '/user/register': {
-    post: postRegisterUserPaths
-  },
-  '/user/login': {
-    post: postLoginUserPaths
-  },
-  '/user/home/{id}': {
-    get: getUserHomepagePaths
-  }
+  ...userPaths
 };
 
 const router = Router();
+
+router.use('/user', user);
 
 const documentation = generateDocumentation(paths);
 
@@ -53,9 +39,6 @@ router.get('/swagger', (_req: any, res: any) => {
 });
 
 router.get('/', handle(hanldeGetMain));
-router.post('/user/register', handle(handlePostRegisterUser));
-router.post('/user/login', handle(handlePostLoginUser));
-router.get('/user/home/:id', handle(handleGetUserHomepage));
 router.get('/login', handle(hanldeGetLogin));
 router.get('/register', handle(handleGetRegister));
 router.get('/forgot', handle(handleGetForgot));

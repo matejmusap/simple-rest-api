@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../models';
+import { User } from '../../models';
 import argon2 from 'argon2';
 
 interface UserRegister {
