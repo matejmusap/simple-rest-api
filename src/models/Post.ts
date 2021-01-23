@@ -1,37 +1,30 @@
 import { DataTypes } from 'sequelize';
 
-const User = {
+const Post = {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  username: {
-    type: DataTypes.STRING,
-    foreignKey: true,
-    unique: true,
-    allowNull: false
-  },
-  email: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false
-  },
-  password: {
+  author: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  admin: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+  title: {
+    type: DataTypes.STRING,
+    unqie: true,
+    allowNull: false
+  },
+  content: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
 };
 
 const options = { paranoid: true };
 
 export default {
-  table: 'users',
-  Scheme: User,
+  table: 'posts',
+  Scheme: Post,
   options
 };
