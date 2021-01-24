@@ -30,7 +30,8 @@ export default async function handlePostLoginUser(
         id: user.id,
         email: user.email
       },
-      process.env.SECRET_TOKEN_KEY || 'my-token-key'
+      process.env.SECRET_TOKEN_KEY || 'my-token-key',
+      { expiresIn: 60000 }
     );
 
     const transporter = nodemailer.createTransport({

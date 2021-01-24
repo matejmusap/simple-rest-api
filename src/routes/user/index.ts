@@ -10,13 +10,13 @@ import handleGetUserHomepage, {
   swaggerPaths as getUserHomepagePaths
 } from './getUserHomepage';
 import handlePostForgotPassword, {
-  swaggerPaths as postForgotPassword
+  swaggerPaths as postForgotPasswordPaths
 } from './postForgotPassword';
 import handleGetResetPasswordPage, {
-  swaggerPaths as getResetPasswordPage
+  swaggerPaths as getResetPasswordPagePaths
 } from './getForgotPasswordPage';
 import handlePostResetPassword, {
-  swaggerPaths as postResetPassword
+  swaggerPaths as postResetPasswordPaths
 } from './postResetPassword';
 
 export const swaggerPaths = {
@@ -30,13 +30,13 @@ export const swaggerPaths = {
     get: getUserHomepagePaths
   },
   '/user/forgot': {
-    get: postForgotPassword
+    get: postForgotPasswordPaths
   },
   '/user/reset/{token}': {
-    get: getResetPasswordPage
+    get: getResetPasswordPagePaths
   },
   '/user/resetPassword': {
-    post: postResetPassword
+    post: postResetPasswordPaths
   }
 };
 

@@ -30,11 +30,13 @@ export default async function handlePostLoginUser(
           id: user.id,
           email: user.email
         },
-        process.env.SECRET_TOKEN_KEY || 'my-token-key'
+        process.env.SECRET_TOKEN_KEY || 'my-token-key',
+        { expiresIn: 60000 }
       );
 
-      res.cookie('my-token', token, { maxAge: 10000, httpOnly: true });
-      res.cookie('userId', user.id, { maxAge: 10000, httpOnly: true });
+      res.cookie('my-token', token, { httpOnly: true });
+      res.cookie('userId', user.id, { httpOnly: true });
+      res.cookie('userUsername', user.username, { httpOnly: true });
 
       return res.send({
         url: `http://${process.env.IP}:${process.env.PORT}/user/home/${user.id}`
