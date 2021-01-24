@@ -6,8 +6,9 @@ const Post = {
     primaryKey: true,
     autoIncrement: true
   },
-  author: {
-    type: DataTypes.STRING,
+  userId: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
     allowNull: false
   },
   title: {

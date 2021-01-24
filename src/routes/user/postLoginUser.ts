@@ -36,7 +36,6 @@ export default async function handlePostLoginUser(
 
       res.cookie('my-token', token, { httpOnly: true });
       res.cookie('userId', user.id, { httpOnly: true });
-      res.cookie('userUsername', user.username, { httpOnly: true });
 
       return res.send({
         url: `http://${process.env.IP}:${process.env.PORT}/user/home/${user.id}`

@@ -1,0 +1,20 @@
+<%- include('./partials/header') %>
+
+<form id="body" action="/posts/new" method="POST">
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input required type="text" class="form-control" id="title" name="title" required>
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">Text</label>
+    <input  type="textarea" class="form-control" id="content" name="content" required >
+  </div>
+  <button type="submit" class="btn btn-primary">Create new Post</button>
+  <div class="row">
+    <div class="form-group">
+      <a href="/">Go Back</a>
+    </div>
+  </div>
+</form>
+
+<%- include('./partials/footer') %>

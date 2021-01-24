@@ -9,6 +9,8 @@ import handleGetRegister, {
 } from './getRegister';
 import handleGetForgot, { swaggerPaths as getForgotPaths } from './getForgot';
 import user, { swaggerPaths as userPaths } from './user';
+import posts, { swaggerPaths as postsPaths } from './posts';
+import comments, { swaggerPaths as commentsPaths } from './comments';
 
 const paths = {
   '/': {
@@ -23,12 +25,16 @@ const paths = {
   '/forgot': {
     get: getForgotPaths
   },
-  ...userPaths
+  ...userPaths,
+  ...postsPaths,
+  ...commentsPaths
 };
 
 const router = Router();
 
 router.use('/user', user);
+router.use('/posts', posts);
+router.use('/comments', comments);
 
 const documentation = generateDocumentation(paths);
 

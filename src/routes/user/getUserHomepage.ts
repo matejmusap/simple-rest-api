@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
-import { User } from '../../models';
+import { Post, User, Comment } from '../../models';
 
 export default async function handleGetUserHomepage(
   req: Request,
@@ -14,6 +14,21 @@ export default async function handleGetUserHomepage(
     },
     raw: true
   });
+  const posts: any = await Post.findAll({
+    where: {
+      userId: req.params.id
+    },
+    raw: true
+  });
+  const comments: any = await Comment.findAll({
+    where: {
+      userId: req.params.id
+    },
+    raw: true
+  });
+  if (posts) user.posts = posts;
+  if (comments) user.comments = comments;
+  if (user) console.log(user);
   if (user) {
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(
@@ -22,14 +37,15 @@ export default async function handleGetUserHomepage(
       );
       return res.render('userHome', {
         name: decoded.email,
-        user: user
+        user: user,
+        posts: user.posts,
+        comments: user.comments
       });
     } else {
       return res.redirect('/login');
     }
-  } else {
-    return badRequest(req, res, 'No user with id!');
   }
+  return badRequest(req, res, 'No user with id!');
 }
 
 export const swaggerPaths = {

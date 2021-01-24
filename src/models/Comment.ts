@@ -6,8 +6,14 @@ const Comment = {
     primaryKey: true,
     autoIncrement: true
   },
-  author: {
+  userId: {
     type: DataTypes.INTEGER,
+    foreignKey: true,
+    allowNull: false
+  },
+  postId: {
+    type: DataTypes.INTEGER,
+    foreignKey: true,
     allowNull: false
   },
   content: {
