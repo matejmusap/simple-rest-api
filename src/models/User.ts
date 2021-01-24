@@ -8,7 +8,6 @@ const User = {
   },
   username: {
     type: DataTypes.STRING,
-    foreignKey: true,
     unique: true,
     allowNull: false
   },

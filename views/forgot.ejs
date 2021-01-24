@@ -1,3 +1,17 @@
-<form>
-  <input type="email" placeholder="Your email">
+<%- include('./partials/header') %>
+
+<h3>Forgot password?</h3>
+<form id="body" action="/user/forgot" method="POST">
+  <div class="mb-3">
+    <label for="email" class="form-label">Email address:</label>
+    <input required type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+  </div>
+  <button type="submit" class="btn btn-primary">Send email with password</button>
+  <div class="row">
+    <div class="form-group">
+      <a href="/">Go Back</a>
+    </div>
+  </div>
 </form>
+
+<%- include('./partials/footer') %>

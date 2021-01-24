@@ -1,34 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
-import { User } from '../../models';
 
-export default async function handleGetUserHomepage(
+export default async function handleGetResetPasswordPage(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const user: any = await User.findOne({
-    where: {
-      id: req.params.id
-    },
-    raw: true
-  });
-  if (user) {
-    if (req.cookies['my-token']) {
+  try {
+    if (req.params.token) {
       const decoded: any = jwt.verify(
-        req.cookies['my-token'],
+        req.params.token,
         process.env.SECRET_TOKEN_KEY || 'my-token-key'
       );
-      return res.render('userHome', {
-        name: decoded.email,
-        user: user
+      res.cookie('userId', decoded.id, { maxAge: 10000, httpOnly: true });
+      res.cookie('my-token', req.params.token, {
+        maxAge: 10000,
+        httpOnly: true
       });
-    } else {
-      return res.redirect('/login');
+      console.log(decoded);
+      return res.render('resetPasswordPage', {
+        name: decoded.email
+      });
     }
-  } else {
-    return badRequest(req, res, 'No user with id!');
+  } catch (err) {
+    return badRequest(req, res, err);
   }
 }
 

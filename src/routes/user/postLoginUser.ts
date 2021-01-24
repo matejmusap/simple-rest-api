@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../../models';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
 
 interface LoginUSer {
@@ -24,7 +25,20 @@ export default async function handlePostLoginUser(
   if (user) {
     const valid = await argon2.verify(user.password, body.password);
     if (valid) {
-      return res.redirect(`/user/home/${user.id}`);
+      var token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email
+        },
+        process.env.SECRET_TOKEN_KEY || 'my-token-key'
+      );
+
+      res.cookie('my-token', token, { maxAge: 10000, httpOnly: true });
+      res.cookie('userId', user.id, { maxAge: 10000, httpOnly: true });
+
+      return res.send({
+        url: `http://${process.env.IP}:${process.env.PORT}/user/home/${user.id}`
+      });
     } else {
       return badRequest(req, res, 'Wrong password!');
     }

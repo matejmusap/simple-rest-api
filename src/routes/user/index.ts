@@ -9,6 +9,15 @@ import handlePostLoginUser, {
 import handleGetUserHomepage, {
   swaggerPaths as getUserHomepagePaths
 } from './getUserHomepage';
+import handlePostForgotPassword, {
+  swaggerPaths as postForgotPassword
+} from './postForgotPassword';
+import handleGetResetPasswordPage, {
+  swaggerPaths as getResetPasswordPage
+} from './getForgotPasswordPage';
+import handlePostResetPassword, {
+  swaggerPaths as postResetPassword
+} from './postResetPassword';
 
 export const swaggerPaths = {
   '/user/register': {
@@ -19,6 +28,15 @@ export const swaggerPaths = {
   },
   '/user/home/{id}': {
     get: getUserHomepagePaths
+  },
+  '/user/forgot': {
+    get: postForgotPassword
+  },
+  '/user/reset/{token}': {
+    get: getResetPasswordPage
+  },
+  '/user/resetPassword': {
+    post: postResetPassword
   }
 };
 
@@ -26,6 +44,9 @@ const router = Router();
 
 router.post('/register', handle(handlePostRegisterUser));
 router.post('/login', handle(handlePostLoginUser));
+router.post('/forgot', handle(handlePostForgotPassword));
+router.post('/resetPassword', handle(handlePostResetPassword));
 router.get('/home/:id', handle(handleGetUserHomepage));
+router.get('/reset/:token', handle(handleGetResetPasswordPage));
 
 export default router;

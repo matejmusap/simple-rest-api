@@ -29,10 +29,10 @@ export const Comment = sequelize.define(
   }
 ) as ModelCtor<Model<any, any>>;
 
-User.hasMany(Post, { foreignKey: 'author', onDelete: 'CASCADE' });
+/* User.hasMany(Post, { foreignKey: 'author', onDelete: 'CASCADE' });
 User.hasMany(Comment, { foreignKey: 'author', onDelete: 'CASCADE' });
 Post.belongsTo(User, { targetKey: 'username' });
-Comment.belongsTo(User, { targetKey: 'username' });
+Comment.belongsTo(User, { targetKey: 'username' }); */
 
 const sequilazeInit = () => sequelize.sync({ force: false, logging: false });
 

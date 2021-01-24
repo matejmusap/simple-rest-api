@@ -1,8 +1,10 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import cookie from 'cookie-parser';
 import sequilazeInit from './models';
 import { error404, error500 } from './utils/errorsHandlers';
 import router from './routes';
+import { jwtHandlerLogin, jwtHandlerResetPassword } from './utils/jwtHandlers';
 
 require('dotenv').config();
 
@@ -17,7 +19,11 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookie());
+
 app.use('/', router);
+app.use(jwtHandlerLogin);
+app.use(jwtHandlerResetPassword);
 app.use(error404);
 app.use(error500);
 

@@ -22,4 +22,32 @@
   </div>
 </form>
 
-<%- include('./partials/footer') %>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" 
+        crossorigin="anonymous">
+</script>
+<Script>
+  document.addEventListener( 'submit', ( e ) => {
+  e.preventDefault();
+
+  fetch( '/user/login', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( {
+          email: document.querySelector( 'input[name="email"]' ).value,
+          password: document.querySelector( 'input[name="password"]' ).value
+      } )        
+  } ).then( async res => {
+      var data = await res.json();
+      
+      if ( data.hasOwnProperty( 'url' ) ) {
+          window.location = data.url;
+      }
+  } );
+} );
+</Script>
+</body>
+</html>

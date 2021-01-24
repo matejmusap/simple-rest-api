@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export default function hanldeForgotLogin(
+export default function hanldeGetForgot(
   _req: Request,
   res: Response,
   _next: NextFunction

@@ -7,7 +7,7 @@ import hanldeGetLogin, { swaggerPaths as getLoginPaths } from './getLogin';
 import handleGetRegister, {
   swaggerPaths as getRegisterPaths
 } from './getRegister';
-import handleGetForgot, { swaggerPaths as getForgotPaths } from './getRegister';
+import handleGetForgot, { swaggerPaths as getForgotPaths } from './getForgot';
 import user, { swaggerPaths as userPaths } from './user';
 
 const paths = {
