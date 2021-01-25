@@ -13,13 +13,16 @@
   <form action="/commm/delete" method="DELETE">
     <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
   </form>
-  <form action="/posts/delete" method="DELETE">
-    <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
-  </form>
   <form action="/posts/edit" method="GET">
     <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
   </form>
 </div>
+<% for(comment of comments){%>
+  <% if(comment.postId===post.id){%>
+  <p><%=comment.content%></p>
+  <p><%=comment.createdAt%></p>
+  <% }%>
+<% }%>
 <form id="body" action="/comments/new" method="POST">
   <div class="mb-3">
     <label for="content">Your comment</label>

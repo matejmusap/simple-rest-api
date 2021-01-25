@@ -16,6 +16,10 @@ const Post = {
     unqie: true,
     allowNull: false
   },
+  // createdTime
+  // blocked
+  // collaboraters
+  // history {edittime, author}
   content: {
     type: DataTypes.STRING,
     allowNull: false

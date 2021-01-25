@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 const User = {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.INTEGER, // uuid
     primaryKey: true,
     autoIncrement: true
   },
@@ -25,6 +25,7 @@ const User = {
     allowNull: false,
     defaultValue: false
   }
+  // blocked
 };
 
 const options = { paranoid: true };

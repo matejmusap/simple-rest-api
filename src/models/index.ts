@@ -54,8 +54,54 @@ Comment.belongsTo(Post, {
   targetKey: 'id'
 });
 
-const sequilazeInit = () => sequelize.sync({ force: false, logging: false });
+// const sequilazeInit = () => sequelize.sync({ force: false, logging: false });
 
 export { UserModel, PostModel, CommentModel };
 
-export default sequilazeInit;
+// export default sequilazeInit;
+import { Client } from 'pg';
+import {
+  createUsersTable,
+  createCommentsTable,
+  createPostsTable
+} from './queries/createTableQuries';
+
+class PgClient {
+  public client: Client;
+  constructor() {
+    this.client = new Client({
+      host: process.env.DB_HOST || 'localhost',
+      database: process.env.DB_NAME || 'test',
+      user: process.env.DB_USERNAME || '',
+      password: process.env.DB_PASSWORD || ''
+    });
+    this.connect();
+    this.createTables();
+  }
+
+  private async connect() {
+    await this.client.connect();
+    console.log('Connected to PG');
+  }
+
+  public async runQuery(query: string) {
+    await this.client.query(query);
+  }
+
+  public async createTables() {
+    try {
+      await this.runQuery(createUsersTable);
+      await this.runQuery(createPostsTable);
+      await this.runQuery(createCommentsTable);
+    } catch (err) {
+      console.log('Tables and sequances already exists!');
+    }
+  }
+}
+
+const pgClient = async () => {
+  const pgInstance = new PgClient();
+  return pgInstance.client;
+};
+
+export default pgClient;

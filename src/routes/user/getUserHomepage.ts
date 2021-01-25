@@ -28,7 +28,6 @@ export default async function handleGetUserHomepage(
   });
   if (posts) user.posts = posts;
   if (comments) user.comments = comments;
-  if (user) console.log(user);
   if (user) {
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(

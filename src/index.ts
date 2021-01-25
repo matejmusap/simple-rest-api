@@ -1,14 +1,14 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import cookie from 'cookie-parser';
-import sequilazeInit from './models';
 import { error404, error500 } from './utils/errorsHandlers';
 import router from './routes';
 import { jwtHandlerLogin, jwtHandlerResetPassword } from './utils/jwtHandlers';
+import pgClient from './models';
 
 require('dotenv').config();
 
-sequilazeInit();
+pgClient();
 
 const port = process.env.PORT || 3000;
 
