@@ -18,6 +18,9 @@ import handleGetResetPasswordPage, {
 import handlePostResetPassword, {
   swaggerPaths as postResetPasswordPaths
 } from './postResetPassword';
+import handlePutAddCollaborator, {
+  swaggerPaths as putAddCollaboratorPaths
+} from './putAddCollaborator';
 
 export const swaggerPaths = {
   '/user/register': {
@@ -37,6 +40,9 @@ export const swaggerPaths = {
   },
   '/user/resetPassword': {
     post: postResetPasswordPaths
+  },
+  '/user/updateCollaborators': {
+    put: putAddCollaboratorPaths
   }
 };
 
@@ -48,5 +54,6 @@ router.post('/forgot', handle(handlePostForgotPassword));
 router.post('/resetPassword', handle(handlePostResetPassword));
 router.get('/home/:id', handle(handleGetUserHomepage));
 router.get('/reset/:token', handle(handleGetResetPasswordPage));
+router.put('/updateCollaborators', handle(handlePutAddCollaborator));
 
 export default router;

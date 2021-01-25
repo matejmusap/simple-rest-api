@@ -26,18 +26,25 @@ export default async function handleGetUserHomepage(
     const posts = postsResponse.rows[0] ? postsResponse.rows : [];
     const commentsQuery = `SELECT * FROM "comments" WHERE "userId"='${id}';`;
     const commentsResponse: any = await pg.runQuery(commentsQuery);
-    const comments = commentsResponse.rows[0] ? commentsResponse.rows : [];
+    const comments = commentsResponse.rows[0]
+      ? commentsResponse.rows[0].collaborators
+      : [];
+    const collaborators = userResponse.rows[0]
+      ? userResponse.rows[0].collaborators
+      : [];
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(
         req.cookies['my-token'],
         process.env.SECRET_TOKEN_KEY || 'my-token-key'
       );
+      res.cookie('userId', user.id, { httpOnly: true });
       return res.render('userHome', {
         name: decoded.email,
         user: user,
         posts: posts,
-        collaborators: allUsers,
-        comments: comments
+        allUsers: allUsers,
+        comments: comments,
+        collaborators: collaborators
       });
     } else {
       return res.redirect('/login');

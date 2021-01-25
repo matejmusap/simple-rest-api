@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
+import methodOverride from 'method-override';
 import cookie from 'cookie-parser';
 import { error404, error500 } from './utils/errorsHandlers';
 import router from './routes';
@@ -16,6 +17,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(methodOverride('_method'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

@@ -2,13 +2,27 @@
 <div class='container'>
   <div class='container'>
 <h1><%=user.username%></h1>
-<form  action="/user/collaborators" method="POST">
-  <label for="content">Add collaborator</label>
-  <select name="collaborators" id="collaborators">
+<form  action="/user/updateCollaborators?_method=PUT" method="POST">
+  <label for="content">Add Collaborator</label>
+  <select name="addCollaborator" id="addCollaborator">
+    <% if(allUsers && allUsers.length){%>
+    <% for(let collaborator of allUsers){%>
+      <option value="<%=collaborator.id%>"><%=collaborator.username%></option>
+      <% }%>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Collaborator</button>
+</form>
+  <% }%>
+  <% if(collaborators && collaborators.length){%>
+  <form  action="/user/updateCollaborators?_method=PUT" method="POST">
+  <label for="content">Remove Collaborator</label>
+  <select name="removeCollaborator" id="removeCollaborator">
     <% for(let collaborator of collaborators){%>
       <option value="<%=collaborator.id%>"><%=collaborator.username%></option>
       <% }%>
   </select>
+  <button type="submit" class="btn btn-primary">Remove Collaborator</button>
+  <% }%>
 </form>
 <form  action="/posts/new" method="GET">
   <button type='submit' href='/posts/new' class="btn btn-link">Create new post</a>
@@ -27,6 +41,14 @@
       <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
     </form>
   </div>
+  <form id="body" action="/comments/new" method="POST">
+    <div class="mb-3">
+      <label for="content">Your comment</label>
+      <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+      <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add comment</button>
+  </form>
   <% if(comments && comments.length){%>
     <% for(comment of comments){%>
       <% if(comment.postId===post.id){%>
@@ -34,14 +56,6 @@
       <p><%=comment.createdTime%></p>
       <% }%>
       <% }%>
-      <form id="body" action="/comments/new" method="POST">
-        <div class="mb-3">
-          <label for="content">Your comment</label>
-          <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
-          <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Add comment</button>
-      </form>
       <% }%>
 <% }%>
 <% }%>
