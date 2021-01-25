@@ -2,6 +2,14 @@
 <div class='container'>
   <div class='container'>
 <h1><%=user.username%></h1>
+<form  action="/user/collaborators" method="POST">
+  <label for="content">Add collaborator</label>
+  <select name="collaborators" id="collaborators">
+    <% for(let collaborator of collaborators){%>
+      <option value="<%=collaborator.id%>"><%=collaborator.username%></option>
+      <% }%>
+  </select>
+</form>
 <form  action="/posts/new" method="GET">
   <button type='submit' href='/posts/new' class="btn btn-link">Create new post</a>
 </form>
@@ -11,6 +19,7 @@
   <div class='container'>
     <h4><%=post.title%></h4>
     <p><%=post.content%></p>
+    <p><%=post.createdTime%></p>
     <form action="/comments/delete" method="DELETE">
       <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
     </form>
@@ -18,20 +27,22 @@
       <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
     </form>
   </div>
+  <% if(comments && comments.length){%>
     <% for(comment of comments){%>
       <% if(comment.postId===post.id){%>
       <p><%=comment.content%></p>
-      <p><%=comment.createdAt%></p>
+      <p><%=comment.createdTime%></p>
       <% }%>
-  <form id="body" action="/comments/new" method="POST">
-    <div class="mb-3">
-      <label for="content">Your comment</label>
-      <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
-      <textarea class="form-control" id="content" name="content" rows="3"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Add comment</button>
-  </form>
-  <% }%>
+      <% }%>
+      <form id="body" action="/comments/new" method="POST">
+        <div class="mb-3">
+          <label for="content">Your comment</label>
+          <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+          <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add comment</button>
+      </form>
+      <% }%>
 <% }%>
 <% }%>
 </div>

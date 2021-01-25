@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import moment from 'moment';
 import { PgClient } from '../../models';
 
 interface NewPost {
@@ -17,7 +18,7 @@ export default async function handlePostNewForm(
 
   const userId = req.cookies['userId'];
 
-  const createdAt: number = Date.now();
+  const createdTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   const query = `INSERT INTO "posts" (
                   "userId",
@@ -26,7 +27,7 @@ export default async function handlePostNewForm(
                   "createdTime") VALUES ('${userId}',
                             '${body.title}',
                             '${body.content}',
-                            ${createdAt})
+                            '${createdTime}')
                             RETURNING id;`;
 
   await pg.runQuery(query);

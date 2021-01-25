@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import moment from 'moment';
 import { PgClient } from '../../models';
 
 interface NewComment {
@@ -14,7 +15,7 @@ export default async function handlePostComment(
   const body: NewComment = req.body;
   const userId = req.cookies['userId'];
   const pg = new PgClient(false);
-  const createdAt: number = Date.now();
+  const createdTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   const query = `INSERT INTO "comments" (
                 "content",
@@ -24,7 +25,7 @@ export default async function handlePostComment(
                 ) VALUES ('${body.content}',
                           '${userId}',
                           ${body.postId},
-                          ${createdAt},)
+                          '${createdTime}')
                           RETURNING id;`;
 
   await pg.runQuery(query);

@@ -17,6 +17,9 @@ export default async function handleGetUserHomepage(
   const userResponse: any = await pg.runQuery(userQuery);
 
   if (userResponse.rows[0]) {
+    const allUsersQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}'`;
+    const allUserResponse: any = await pg.runQuery(allUsersQuery);
+    const allUsers = allUserResponse.rows;
     const user = userResponse.rows[0];
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
     const postsResponse: any = await pg.runQuery(postsQueries);
@@ -33,6 +36,7 @@ export default async function handleGetUserHomepage(
         name: decoded.email,
         user: user,
         posts: posts,
+        collaborators: allUsers,
         comments: comments
       });
     } else {
