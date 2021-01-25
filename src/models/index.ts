@@ -1,74 +1,18 @@
-import UserModel from './User';
-import PostModel from './Post';
-import CommentModel from './Comment';
-import { Model, ModelCtor, Sequelize } from 'sequelize';
-
-require('dotenv').config();
-
-const sequelize = new Sequelize({
-  dialect: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'test',
-  username: process.env.DB_USERNAME || '',
-  password: process.env.DB_PASSWORD || ''
-});
-
-export const User = sequelize.define(UserModel.table, UserModel.Scheme, {
-  ...UserModel.options
-}) as ModelCtor<Model<any, any>>;
-
-export const Post = sequelize.define(PostModel.table, PostModel.Scheme, {
-  ...PostModel.options
-}) as ModelCtor<Model<any, any>>;
-
-export const Comment = sequelize.define(
-  CommentModel.table,
-  CommentModel.Scheme,
-  {
-    ...CommentModel.options
-  }
-) as ModelCtor<Model<any, any>>;
-
-User.hasMany(Post, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',
-  as: 'posts'
-});
-User.hasMany(Comment, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',
-  as: 'comments'
-});
-Post.hasMany(Comment, {
-  foreignKey: 'postId',
-  onDelete: 'CASCADE',
-  as: 'comments'
-});
-Post.belongsTo(User, {
-  targetKey: 'id'
-});
-Comment.belongsTo(User, {
-  targetKey: 'id'
-});
-Comment.belongsTo(Post, {
-  targetKey: 'id'
-});
-
-// const sequilazeInit = () => sequelize.sync({ force: false, logging: false });
-
-export { UserModel, PostModel, CommentModel };
-
-// export default sequilazeInit;
 import { Client } from 'pg';
 import {
   createUsersTable,
   createCommentsTable,
-  createPostsTable
+  createPostsTable,
+  createPostHistoryTable
 } from './queries/createTableQuries';
 
-class PgClient {
+require('dotenv').config();
+export class PgClient {
   public client: Client;
-  constructor() {
+  init: boolean = false;
+
+  constructor(init: boolean) {
+    this.init = init;
     this.client = new Client({
       host: process.env.DB_HOST || 'localhost',
       database: process.env.DB_NAME || 'test',
@@ -76,16 +20,23 @@ class PgClient {
       password: process.env.DB_PASSWORD || ''
     });
     this.connect();
-    this.createTables();
+    if (this.init) {
+      this.createTables();
+    }
   }
 
   private async connect() {
-    await this.client.connect();
-    console.log('Connected to PG');
+    try {
+      await this.client.connect();
+      console.log('Connected to PG');
+    } catch (err) {
+      console.log('PG connecting problems');
+    }
   }
 
   public async runQuery(query: string) {
-    await this.client.query(query);
+    const result = await this.client.query(query);
+    return result;
   }
 
   public async createTables() {
@@ -93,15 +44,16 @@ class PgClient {
       await this.runQuery(createUsersTable);
       await this.runQuery(createPostsTable);
       await this.runQuery(createCommentsTable);
+      await this.runQuery(createPostHistoryTable);
     } catch (err) {
       console.log('Tables and sequances already exists!');
     }
   }
 }
 
-const pgClient = async () => {
-  const pgInstance = new PgClient();
+const pgInitClient = async () => {
+  const pgInstance = new PgClient(true);
   return pgInstance.client;
 };
 
-export default pgClient;
+export default pgInitClient;

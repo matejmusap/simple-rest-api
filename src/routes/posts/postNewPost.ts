@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Post } from '../../models';
+import { PgClient } from '../../models';
 
 interface NewPost {
   title: string;
@@ -11,14 +11,26 @@ export default async function handlePostNewForm(
   res: Response,
   _next: NextFunction
 ) {
+  const pg = new PgClient(false);
+
   const body: NewPost = req.body;
 
-  const post = Post.build({
-    userId: req.cookies['userId'],
-    title: body.title,
-    content: body.content
-  });
-  await post.save();
+  const userId = req.cookies['userId'];
+
+  const createdAt: number = Date.now();
+
+  const query = `INSERT INTO "posts" (
+                  "userId",
+                  "title",
+                  "content",
+                  "createdTime") VALUES ('${userId}',
+                            '${body.title}',
+                            '${body.content}',
+                            ${createdAt})
+                            RETURNING id;`;
+
+  await pg.runQuery(query);
+  res.cookie('userId', userId, { httpOnly: true });
   res.redirect(`/user/home/${req.cookies['userId']}`);
 }
 

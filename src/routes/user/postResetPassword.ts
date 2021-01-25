@@ -1,18 +1,26 @@
 import argon2 from 'argon2';
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../../models';
+import { badRequest } from '../../utils/errorsHandlers';
+import { PgClient } from '../../models';
 
 export default async function handlePostResetPasswordPage(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
+  const pgClient = new PgClient(false);
+
   const userId = req.cookies['userId'];
-  const user: any = await User.findOne({ where: { id: userId } });
-  const password = await argon2.hash(req.body.password);
-  user.password = password;
-  await user.save();
-  return res.render('passwordReset');
+  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${userId}'`;
+  const userResponse: any = await pgClient.runQuery(queryGetUser);
+  const user: any = userResponse.rows[0];
+  if (user) {
+    const password = await argon2.hash(req.body.password);
+    const queryUpdateUser = `UPDATE "users" SET "password"=${password} WHERE "id"='${userId}'`;
+    await pgClient.runQuery(queryUpdateUser);
+    return res.render('passwordReset');
+  }
+  return badRequest(req, res, 'No user with id');
 }
 
 export const swaggerPaths = {

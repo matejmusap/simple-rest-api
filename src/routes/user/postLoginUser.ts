@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../../models';
+import { PgClient } from '../../models';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
 
-interface LoginUSer {
+interface LoginUser {
   email: string;
   password: string;
 }
@@ -14,14 +14,13 @@ export default async function handlePostLoginUser(
   res: Response,
   _next: NextFunction
 ) {
-  const body: LoginUSer = req.body;
+  const pgClient = new PgClient(false);
+  const body: LoginUser = req.body;
 
-  const user: any = await User.findOne({
-    where: {
-      email: body.email
-    },
-    raw: true
-  });
+  const query = `SELECT * FROM "users" WHERE "email"='${body.email}'`;
+
+  const userResponse: any = await pgClient.runQuery(query);
+  const user: any = userResponse.rows[0];
   if (user) {
     const valid = await argon2.verify(user.password, body.password);
     if (valid) {

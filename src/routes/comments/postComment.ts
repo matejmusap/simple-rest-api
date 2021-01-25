@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Comment } from '../../models';
+import { PgClient } from '../../models';
 
 interface NewComment {
   content: string;
@@ -12,13 +12,22 @@ export default async function handlePostComment(
   _next: NextFunction
 ) {
   const body: NewComment = req.body;
+  const userId = req.cookies['userId'];
+  const pg = new PgClient(false);
+  const createdAt: number = Date.now();
 
-  const comment = Comment.build({
-    userId: req.cookies['userId'],
-    content: body.content,
-    postId: body.postId
-  });
-  await comment.save();
+  const query = `INSERT INTO "comments" (
+                "content",
+                "userId",
+                "postId",
+                "createdTime"
+                ) VALUES ('${body.content}',
+                          '${userId}',
+                          ${body.postId},
+                          ${createdAt},)
+                          RETURNING id;`;
+
+  await pg.runQuery(query);
   res.redirect(`/user/home/${req.cookies['userId']}`);
 }
 

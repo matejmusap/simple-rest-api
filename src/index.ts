@@ -4,11 +4,11 @@ import cookie from 'cookie-parser';
 import { error404, error500 } from './utils/errorsHandlers';
 import router from './routes';
 import { jwtHandlerLogin, jwtHandlerResetPassword } from './utils/jwtHandlers';
-import pgClient from './models';
+import pgInitClient from './models';
 
 require('dotenv').config();
 
-pgClient();
+pgInitClient();
 
 const port = process.env.PORT || 3000;
 

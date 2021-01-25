@@ -1,34 +1,29 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
-import { Post, User, Comment } from '../../models';
+import { PgClient } from '../../models';
 
 export default async function handleGetUserHomepage(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const user: any = await User.findOne({
-    where: {
-      id: req.params.id
-    },
-    raw: true
-  });
-  const posts: any = await Post.findAll({
-    where: {
-      userId: req.params.id
-    },
-    raw: true
-  });
-  const comments: any = await Comment.findAll({
-    where: {
-      userId: req.params.id
-    },
-    raw: true
-  });
-  if (posts) user.posts = posts;
-  if (comments) user.comments = comments;
-  if (user) {
+  const id = req.params.id;
+
+  const userQuery = `SELECT * FROM "users" WHERE "id"='${id}';`;
+
+  const pg = new PgClient(false);
+
+  const userResponse: any = await pg.runQuery(userQuery);
+
+  if (userResponse.rows[0]) {
+    const user = userResponse.rows[0];
+    const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
+    const postsResponse: any = await pg.runQuery(postsQueries);
+    const posts = postsResponse.rows[0] ? postsResponse.rows : [];
+    const commentsQuery = `SELECT * FROM "comments" WHERE "userId"='${id}';`;
+    const commentsResponse: any = await pg.runQuery(commentsQuery);
+    const comments = commentsResponse.rows[0] ? commentsResponse.rows : [];
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(
         req.cookies['my-token'],
@@ -37,8 +32,8 @@ export default async function handleGetUserHomepage(
       return res.render('userHome', {
         name: decoded.email,
         user: user,
-        posts: user.posts,
-        comments: user.comments
+        posts: posts,
+        comments: comments
       });
     } else {
       return res.redirect('/login');

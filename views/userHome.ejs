@@ -6,31 +6,33 @@
   <button type='submit' href='/posts/new' class="btn btn-link">Create new post</a>
 </form>
 </div>
-<% for(let post of posts){%>
-<div class='container'>
-  <h4><%=post.title%></h4>
-  <p><%=post.content%></p>
-  <form action="/commm/delete" method="DELETE">
-    <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
+<% if(posts && posts.length){%>
+  <% for(let post of posts){%>
+  <div class='container'>
+    <h4><%=post.title%></h4>
+    <p><%=post.content%></p>
+    <form action="/comments/delete" method="DELETE">
+      <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
+    </form>
+    <form action="/posts/edit" method="GET">
+      <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
+    </form>
+  </div>
+    <% for(comment of comments){%>
+      <% if(comment.postId===post.id){%>
+      <p><%=comment.content%></p>
+      <p><%=comment.createdAt%></p>
+      <% }%>
+  <form id="body" action="/comments/new" method="POST">
+    <div class="mb-3">
+      <label for="content">Your comment</label>
+      <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+      <textarea class="form-control" id="content" name="content" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add comment</button>
   </form>
-  <form action="/posts/edit" method="GET">
-    <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
-  </form>
-</div>
-<% for(comment of comments){%>
-  <% if(comment.postId===post.id){%>
-  <p><%=comment.content%></p>
-  <p><%=comment.createdAt%></p>
   <% }%>
 <% }%>
-<form id="body" action="/comments/new" method="POST">
-  <div class="mb-3">
-    <label for="content">Your comment</label>
-    <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
-    <textarea class="form-control" id="content" name="content" rows="3"></textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Add comment</button>
-</form>
 <% }%>
 </div>
 <%- include('./partials/footer') %>
