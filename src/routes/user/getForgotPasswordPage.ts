@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { badRequest } from '../../utils/errorsHandlers';
+require('dotenv').config();
 
 export default async function handleGetResetPasswordPage(
   req: Request,

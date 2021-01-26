@@ -39,7 +39,7 @@ export class PgClient {
     return result;
   }
 
-  public async createTables() {
+  private async createTables() {
     try {
       await this.runQuery(createUsersTable);
       await this.runQuery(createPostsTable);
@@ -55,5 +55,7 @@ const pgInitClient = async () => {
   const pgInstance = new PgClient(true);
   return pgInstance.client;
 };
+
+export const client: PgClient = new PgClient(false);
 
 export default pgInitClient;

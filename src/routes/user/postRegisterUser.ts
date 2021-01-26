@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import argon2 from 'argon2';
-import { PgClient } from '../../models';
-import { nanoid } from 'nanoid';
+import { client } from '../../models';
+import randomstring from 'randomstring';
 
 interface UserRegister {
   email: string;
@@ -10,28 +10,47 @@ interface UserRegister {
   admin: boolean;
 }
 
+const responseToData = async (query: any): Promise<any[]> => {
+  const response: any = await client.runQuery(query);
+  const data = response.rows[0] ? response.rows : [];
+  return data;
+};
+
+const checkIfIdIsUnique = async () => {
+  let id: any = randomstring.generate({
+    length: 20,
+    charset: 'numeric'
+  });
+  const getUserQuery = `SELECT * FROM "users" WHERE "id"='${id}'`;
+  const user = await responseToData(getUserQuery);
+  if (user === []) {
+    checkIfIdIsUnique();
+  }
+  return String(id);
+};
+
+const setAdmin = async (): Promise<boolean> => {
+  const queryCountUsers = `SELECT COUNT(*) FROM "users"`;
+  const count = await client.runQuery(queryCountUsers);
+
+  if (count.rows[0].count === '0') {
+    return true;
+  }
+  return false;
+};
+
 export default async function handlePostRegisterUser(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const pg = new PgClient(false);
-
   const body: UserRegister = req.body;
-
-  const id: string = nanoid(20);
 
   const password = await argon2.hash(body.password);
 
-  let admin: boolean = false;
+  let admin: boolean = await setAdmin();
 
-  const queryCountUsers = `SELECT COUNT(*) FROM "users" `;
-
-  const count = await pg.runQuery(queryCountUsers);
-
-  if (count.rows[0].count === '0') {
-    admin = true;
-  }
+  const id = await checkIfIdIsUnique();
 
   const query = `INSERT INTO "users" (
                 "id",
@@ -48,7 +67,7 @@ export default async function handlePostRegisterUser(
                               false)
                               RETURNING id;`;
 
-  await pg.runQuery(query);
+  await client.runQuery(query);
 
   res.redirect('/');
 }

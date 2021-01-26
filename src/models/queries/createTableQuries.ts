@@ -6,7 +6,6 @@ export const createUsersTable = `
                               "password" character varying(255) NOT NULL,
                               "admin" boolean DEFAULT false,
                               "blocked" boolean DEFAULT false,
-                              "collaborators" TEXT [] DEFAULT array[]::varchar[],
                               CONSTRAINT "users_pkey" PRIMARY KEY ("id"),
                               CONSTRAINT "users_id_key" UNIQUE ("id"),
                               CONSTRAINT "users_username_key" UNIQUE ("username"),
@@ -54,4 +53,16 @@ export const createPostHistoryTable = `
                             CONSTRAINT "postHistory_pkey" PRIMARY KEY ("id"),
                             CONSTRAINT "postHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
                             CONSTRAINT "postHistory_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE NOT DEFERRABLE
+                          ) WITH (oids = false);`;
+
+export const createCollaboratorsTable = `
+                        CREATE SEQUENCE "collaborators_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
+
+                          CREATE TABLE "public"."collaborators" (
+                            "id" integer DEFAULT nextval('"pcollaborators_id_seq"') NOT NULL,
+                            "userId" character varying(20) NOT NULL,
+                            "collaboratorId" character varying(20) NOT NULL,
+                            CONSTRAINT "collaborators_pkey" PRIMARY KEY ("id"),
+                            CONSTRAINT "collaborators_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
+                            CONSTRAINT "collaborators_collaboratorId_fkey" FOREIGN KEY ("collaboratorId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE
                           ) WITH (oids = false);`;

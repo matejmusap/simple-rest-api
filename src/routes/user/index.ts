@@ -15,12 +15,15 @@ import handlePostForgotPassword, {
 import handleGetResetPasswordPage, {
   swaggerPaths as getResetPasswordPagePaths
 } from './getForgotPasswordPage';
-import handlePostResetPassword, {
-  swaggerPaths as postResetPasswordPaths
-} from './postResetPassword';
-import handlePutAddCollaborator, {
-  swaggerPaths as putAddCollaboratorPaths
-} from './putAddCollaborator';
+import handlePutResetPassword, {
+  swaggerPaths as putResetPasswordPaths
+} from './putResetPassword';
+import handlePostCreateCollaboration, {
+  swaggerPaths as postCreateCollaborationPaths
+} from './postCreateCollaboration';
+import handlePutAddAdmin, {
+  swaggerPaths as putAddAdminPaths
+} from './putAddAdmin';
 
 export const swaggerPaths = {
   '/user/register': {
@@ -39,10 +42,13 @@ export const swaggerPaths = {
     get: getResetPasswordPagePaths
   },
   '/user/resetPassword': {
-    post: postResetPasswordPaths
+    put: putResetPasswordPaths
   },
-  '/user/updateCollaborators': {
-    put: putAddCollaboratorPaths
+  '/user/cretaCollaboration': {
+    post: postCreateCollaborationPaths
+  },
+  '/user/addAdmin': {
+    put: putAddAdminPaths
   }
 };
 
@@ -51,9 +57,10 @@ const router = Router();
 router.post('/register', handle(handlePostRegisterUser));
 router.post('/login', handle(handlePostLoginUser));
 router.post('/forgot', handle(handlePostForgotPassword));
-router.post('/resetPassword', handle(handlePostResetPassword));
+router.post('/cretaCollaboration', handle(handlePostCreateCollaboration));
 router.get('/home/:id', handle(handleGetUserHomepage));
 router.get('/reset/:token', handle(handleGetResetPasswordPage));
-router.put('/updateCollaborators', handle(handlePutAddCollaborator));
+router.put('/resetPassword', handle(handlePutResetPassword));
+router.put('/addAdmin', handle(handlePutAddAdmin));
 
 export default router;

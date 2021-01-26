@@ -2,22 +2,34 @@
 <div class='container'>
   <div class='container'>
 <h1><%=user.username%></h1>
-<form  action="/user/updateCollaborators?_method=PUT" method="POST">
+<% if(user.admin){%>
+  <form  id="body" action="/user/addAdmin?_method=PUT" method="POST">
+  <label for="content">Add Collaborator</label>
+  <select name="admin" id="admin">
+    <% if(users && users.length){%>
+    <% for(let notAdmin of users){%>
+      <option value="<%=notAdmin.id%>"><%=notAdmin.username%></option>
+      <% }%>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Collaborator</button>
+</form>
+  <% }%>
+<form  id="body" action="/user/updateCollaborators?_method=PUT" method="POST">
   <label for="content">Add Collaborator</label>
   <select name="addCollaborator" id="addCollaborator">
-    <% if(allUsers && allUsers.length){%>
-    <% for(let collaborator of allUsers){%>
+    <% if(collaboratorsToAdd && collaboratorsToAdd.length){%>
+    <% for(let collaborator of collaboratorsToAdd){%>
       <option value="<%=collaborator.id%>"><%=collaborator.username%></option>
       <% }%>
   </select>
   <button type="submit" class="btn btn-primary">Add Collaborator</button>
 </form>
   <% }%>
-  <% if(collaborators && collaborators.length){%>
-  <form  action="/user/updateCollaborators?_method=PUT" method="POST">
+  <% if(collaboratorsToRemove && collaboratorsToRemove.length){%>
+  <form  id="body" action="/user/updateCollaborators?_method=PUT" method="POST">
   <label for="content">Remove Collaborator</label>
   <select name="removeCollaborator" id="removeCollaborator">
-    <% for(let collaborator of collaborators){%>
+    <% for(let collaborator of collaboratorsToRemove){%>
       <option value="<%=collaborator.id%>"><%=collaborator.username%></option>
       <% }%>
   </select>
@@ -38,7 +50,7 @@
       <button type='submit' href='/posts/edit' class="btn btn-link">Edit post</a>
     </form>
     <form action="/posts/edit" method="GET">
-      <button type='submit' href='/posts/delete' class="btn btn-link">Delete Post</a>
+      <button type='submit' href='/posts/delete?_method=DELETE' class="btn btn-link">Delete Post</a>
     </form>
   </div>
   <form id="body" action="/comments/new" method="POST">

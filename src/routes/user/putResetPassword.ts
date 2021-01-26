@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { badRequest } from '../../utils/errorsHandlers';
 import { PgClient } from '../../models';
 
-export default async function handlePostResetPasswordPage(
+export default async function handlePutResetPassword(
   req: Request,
   res: Response,
   _next: NextFunction
