@@ -9,7 +9,7 @@ const getUser = async (userId: string) => {
   return user;
 };
 
-export default async function handlePostCreateCollaborators(
+export default async function handlePostAddCollaboration(
   req: Request,
   res: Response,
   _next: NextFunction

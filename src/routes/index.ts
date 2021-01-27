@@ -11,6 +11,9 @@ import handleGetForgot, { swaggerPaths as getForgotPaths } from './getForgot';
 import user, { swaggerPaths as userPaths } from './user';
 import posts, { swaggerPaths as postsPaths } from './posts';
 import comments, { swaggerPaths as commentsPaths } from './comments';
+import collaborators, {
+  swaggerPaths as collaborationsPaths
+} from './collaborators';
 
 const paths = {
   '/': {
@@ -27,7 +30,8 @@ const paths = {
   },
   ...userPaths,
   ...postsPaths,
-  ...commentsPaths
+  ...commentsPaths,
+  ...collaborationsPaths
 };
 
 const router = Router();
@@ -35,6 +39,7 @@ const router = Router();
 router.use('/user', user);
 router.use('/posts', posts);
 router.use('/comments', comments);
+router.use('/collaborators', collaborators);
 
 const documentation = generateDocumentation(paths);
 
