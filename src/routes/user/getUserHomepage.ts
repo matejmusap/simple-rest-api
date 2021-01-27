@@ -21,7 +21,7 @@ export default async function handleGetUserHomepage(
     let collaboratorsToRemove: string[] = [];
     let collaboratorsToAdd: string[] = [];
 
-    const notAdminQuery = `SELECT * FROM "users" WHERE WHERE NOT "id"='${id}' "admin"=false;`;
+    const notAdminQuery = `SELECT * FROM "users" WHERE WHERE NOT "id"='${id}' AND "admin"=false;`;
     const notAdmin: any = await client.responseToData(notAdminQuery);
 
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
@@ -38,12 +38,12 @@ export default async function handleGetUserHomepage(
 
       const responseBody = {
         name: decoded.email,
-        user: user,
-        posts: posts,
-        comments: comments,
-        collaboratorsToAdd: collaboratorsToAdd,
-        collaboratorsToRemove: collaboratorsToRemove,
-        notAdmin: notAdmin
+        user,
+        posts,
+        comments,
+        collaboratorsToAdd,
+        collaboratorsToRemove,
+        notAdmin
       };
 
       res.cookie('userId', user.id, { httpOnly: true });

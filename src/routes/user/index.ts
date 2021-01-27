@@ -21,6 +21,12 @@ import handlePutResetPassword, {
 import handlePutAddAdmin, {
   swaggerPaths as putAddAdminPaths
 } from './putAddAdmin';
+import handleGetUserNewsfeed, {
+  swaggerPaths as getUserNewsfeedPaths
+} from './getUserNewsfeed';
+import handlePutBlockUser, {
+  swaggerPaths as putBlockUserPaths
+} from './putBlockUser';
 
 export const swaggerPaths = {
   '/user/register': {
@@ -43,6 +49,12 @@ export const swaggerPaths = {
   },
   '/user/addAdmin': {
     put: putAddAdminPaths
+  },
+  '/user/newsfeed/{id}': {
+    get: getUserNewsfeedPaths
+  },
+  '/user/blockUser': {
+    put: putBlockUserPaths
   }
 };
 
@@ -53,7 +65,9 @@ router.post('/login', handle(handlePostLoginUser));
 router.post('/forgot', handle(handlePostForgotPassword));
 router.get('/home/:id', handle(handleGetUserHomepage));
 router.get('/reset/:token', handle(handleGetResetPasswordPage));
+router.get('/newsfeed/:id', handle(handleGetUserNewsfeed));
 router.put('/resetPassword', handle(handlePutResetPassword));
 router.put('/addAdmin', handle(handlePutAddAdmin));
+router.put('/blockUser', handle(handlePutBlockUser));
 
 export default router;

@@ -12,11 +12,14 @@ export default async function handlePutAddAdmin(
   const userResponse: any = await client.runQuery(queryGetUser);
   const user: any = userResponse.rows[0];
   if (user) {
-    const queryUpdateUser = `UPDATE "users" SET "admin"=true WHERE "id"='${userId}'`;
+    const blockUpdate: boolean = !user.blocked;
+    const queryUpdateUser = `UPDATE "users" SET "blocked"=${blockUpdate} WHERE "id"='${userId}'`;
     await client.runQuery(queryUpdateUser);
     res.cookie('userId', userId, { httpOnly: true });
     res.redirect(`/user/home/${req.cookies['userId']}`);
   }
+
+  res.cookie('userId', user.id, { httpOnly: true });
   return badRequest(req, res, 'No user with id');
 }
 

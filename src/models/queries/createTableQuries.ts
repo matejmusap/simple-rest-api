@@ -20,7 +20,8 @@ export const createPostsTable = `
                           "userId" character varying(20) NOT NULL,
                           "title" character varying(255) NOT NULL,
                           "content" character varying(255) NOT NULL,
-                          "createdTime" character varying(255) NOT NULL,
+                          "createOrEditTime" character varying(255) NOT NULL,
+                          "blocked" boolean DEFAULT false,
                           CONSTRAINT "posts_pkey" PRIMARY KEY ("id"),
                           CONSTRAINT "posts_id_key" UNIQUE ("id"),
                           CONSTRAINT "posts_title_key" UNIQUE ("title"),
@@ -35,7 +36,7 @@ export const createCommentsTable = `
                             "content" character varying(255) NOT NULL,
                             "userId" character varying(255) NOT NULL,
                             "postId" integer NOT NULL,
-                            "createOrEditTime" character varying(255) NOT NULL,
+                            "createTime" character varying(255) NOT NULL,
                             CONSTRAINT "comments_pkey" PRIMARY KEY ("id"),
                             CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
                             CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE NOT DEFERRABLE

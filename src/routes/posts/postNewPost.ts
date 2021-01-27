@@ -22,10 +22,12 @@ export default async function handlePostNewForm(
                   "userId",
                   "title",
                   "content",
-                  "createOrEditTime") VALUES ('${userId}',
+                  "createOrEditTime",
+                  "blocked") VALUES ('${userId}',
                             '${body.title}',
                             '${body.content}',
-                            '${createOrEditTime}')
+                            '${createOrEditTime}',
+                            false)
                             RETURNING id;`;
 
   await client.runQuery(query);
