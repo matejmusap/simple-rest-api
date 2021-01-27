@@ -35,7 +35,7 @@ export const createCommentsTable = `
                             "content" character varying(255) NOT NULL,
                             "userId" character varying(255) NOT NULL,
                             "postId" integer NOT NULL,
-                            "createdTime" character varying(255) NOT NULL,
+                            "createOrEditTime" character varying(255) NOT NULL,
                             CONSTRAINT "comments_pkey" PRIMARY KEY ("id"),
                             CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
                             CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE NOT DEFERRABLE
@@ -48,7 +48,7 @@ export const createPostHistoryTable = `
                             "id" integer DEFAULT nextval('"postHistory_id_seq"') NOT NULL,
                             "userId" character varying(255) NOT NULL,
                             "postId" integer NOT NULL,
-                            "editTime" character varying(255) NOT NULL,
+                            "lastEditTime" character varying(255) NOT NULL,
                             "oldContent" character varying(255) NOT NULL,
                             CONSTRAINT "postHistory_pkey" PRIMARY KEY ("id"),
                             CONSTRAINT "postHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,

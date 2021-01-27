@@ -16,16 +16,16 @@ export default async function handlePostNewForm(
 
   const userId = req.cookies['userId'];
 
-  const createdTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
+  const createOrEditTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   const query = `INSERT INTO "posts" (
                   "userId",
                   "title",
                   "content",
-                  "createdTime") VALUES ('${userId}',
+                  "createOrEditTime") VALUES ('${userId}',
                             '${body.title}',
                             '${body.content}',
-                            '${createdTime}')
+                            '${createOrEditTime}')
                             RETURNING id;`;
 
   await client.runQuery(query);
