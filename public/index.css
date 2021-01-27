@@ -6,3 +6,30 @@
   justify-content: space-around;
   align-items: center;
 }
+
+.userHome {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.userNewsFeed {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.posts {
+  border: lawngreen;
+}
+
+.checkEmail {
+  margin-top: 25%;
+  font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}

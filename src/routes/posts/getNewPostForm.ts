@@ -1,11 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 
 export default function hanldeGetForgot(
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  res.render('newPostForm');
+  const userId = req.cookies['userId'];
+
+  res.render('newPostForm', { userId });
 }
 
 export const swaggerPaths = {

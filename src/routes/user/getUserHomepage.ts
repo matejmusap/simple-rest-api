@@ -20,15 +20,19 @@ export default async function handleGetUserHomepage(
   if (user) {
     let collaboratorsToRemove: string[] = [];
     let collaboratorsToAdd: string[] = [];
-
-    const notAdminQuery = `SELECT * FROM "users" WHERE WHERE NOT "id"='${id}' AND "admin"=false;`;
-    const notAdmin: any = await client.responseToData(notAdminQuery);
+    let notAdmin: string[] = [];
 
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
-    const commentsQuery = `SELECT * FROM "comments" WHERE "userId"='${id}';`;
+    const commentsQuery = `SELECT * FROM "comments";`;
 
     const posts = await client.responseToData(postsQueries);
     const comments: any = await client.responseToData(commentsQuery);
+    for (let comment of comments) {
+      const getUsernameQuery = `SELECT "username" FROM "users" WHERE "id"='${comment.userId}'`;
+      const usernameResponse = await client.responseToData(getUsernameQuery);
+      const username = usernameResponse[0].username;
+      comment.author = username;
+    }
 
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(

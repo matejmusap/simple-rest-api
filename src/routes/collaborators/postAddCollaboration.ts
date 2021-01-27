@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { client } from 'src/models';
+import { client } from '../../models';
 
 interface CreateCollaboration {
   collaboratorId: string;

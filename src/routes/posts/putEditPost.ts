@@ -31,7 +31,7 @@ export default async function handlePutEditPost(
 
   await client.runQuery(query);
 
-  const updatePostQuery = `UPDATE "posts" SET "content"='${body.content}', "createOrEditTime"='${editTime}' WHERE "id"=${body.postId}`;
+  const updatePostQuery = `UPDATE "posts" SET "content"='${body.content}', "edited"=true, "createOrEditTime"='${editTime}' WHERE "id"=${body.postId}`;
   await client.runQuery(updatePostQuery);
 
   res.cookie('userId', userId, { httpOnly: true });

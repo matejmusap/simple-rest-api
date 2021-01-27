@@ -12,27 +12,31 @@ export default async function handlePostNewForm(
   res: Response,
   _next: NextFunction
 ) {
-  const body: NewPost = req.body;
+  try {
+    const body: NewPost = req.body;
 
-  const userId = req.cookies['userId'];
+    const userId = req.cookies['userId'];
 
-  const createOrEditTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
+    const createOrEditTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
 
-  const query = `INSERT INTO "posts" (
-                  "userId",
-                  "title",
-                  "content",
-                  "createOrEditTime",
-                  "blocked") VALUES ('${userId}',
-                            '${body.title}',
-                            '${body.content}',
-                            '${createOrEditTime}',
-                            false)
-                            RETURNING id;`;
+    const query = `INSERT INTO "posts" (
+                    "userId",
+                    "title",
+                    "content",
+                    "createOrEditTime",
+                    "blocked") VALUES ('${userId}',
+                              '${body.title}',
+                              '${body.content}',
+                              '${createOrEditTime}',
+                              false)
+                              RETURNING id;`;
 
-  await client.runQuery(query);
-  res.cookie('userId', userId, { httpOnly: true });
-  res.redirect(`/user/home/${req.cookies['userId']}`);
+    await client.runQuery(query);
+    res.cookie('userId', userId, { httpOnly: true });
+    res.redirect(`/user/home/${req.cookies['userId']}`);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export const swaggerPaths = {

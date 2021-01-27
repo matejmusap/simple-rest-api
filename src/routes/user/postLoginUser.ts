@@ -23,7 +23,7 @@ export default async function handlePostLoginUser(
   if (user) {
     const valid = await argon2.verify(user.password, body.password);
     if (valid) {
-      var token = jwt.sign(
+      const token = jwt.sign(
         {
           id: user.id,
           email: user.email

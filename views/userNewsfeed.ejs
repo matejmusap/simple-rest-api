@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>post_app</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" 
+        crossorigin="anonymous">    
+    <link rel="stylesheet" href="/index.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/user/home/<%=userId%>">Home </a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/user/newsfeed/<%=userId%>">Newsfeed </a>
+      </li>
+  </div>
+</nav>
+<div class="userNewsFeed">
+  <h1>Newsfeed</h1>
+  <div class="posts">
+  <% if(allPosts && allPosts.length){%>
+    <% for(let post of allPosts){%>
+      <h4><%=post.title%></h4>
+    <p><%=post.content%></p>
+    <% if(!post.edited){%>
+      <p>Created: <%=post.createOrEditTime%></p>
+      <% } else {%>
+        <p>Edited: <%=post.createOrEditTime%></p>
+        <% }%>
+    <p>Author: <%=post.author%></p>
+    <form id="body" action="/comments/new" method="POST">
+      <div class="mb-3">
+        <label for="content">Your comment</label>
+        <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Add comment</button>
+    </form>
+    <% if(allComments && allComments.length){%>
+      <% for(let comment of allComments){%>
+        <% if(comment.postId===post.id){%>
+        <p><%=comment.content%></p>
+        <p>author: <%=comment.author%></p>
+        <p>Created: <%=comment.createdTime%></p>
+        <% }%>
+        <% }%>
+        <% }%>
+      <% }%>
+      <% }%>
+
+    </div>
+    
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" 
+        crossorigin="anonymous">
+</script>
+</body>
+</html>
