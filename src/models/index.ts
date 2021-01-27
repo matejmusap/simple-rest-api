@@ -3,8 +3,10 @@ import {
   createUsersTable,
   createCommentsTable,
   createPostsTable,
-  createPostHistoryTable
+  createPostHistoryTable,
+  createCollaboratorsTable
 } from './queries/createTableQuries';
+import randomstring from 'randomstring';
 
 require('dotenv').config();
 export class PgClient {
@@ -25,7 +27,36 @@ export class PgClient {
     }
   }
 
-  private async connect() {
+  public async setAdmin(): Promise<boolean> {
+    const queryCountUsers = `SELECT COUNT(*) FROM "users"`;
+    const count = await this.runQuery(queryCountUsers);
+
+    if (count.rows[0].count === '0') {
+      return true;
+    }
+    return false;
+  }
+
+  public async responseToData(query: string): Promise<any[]> {
+    const response: any = await this.runQuery(query);
+    const data = response.rows[0] ? response.rows : [];
+    return data;
+  }
+
+  public async checkIfIdIsUnique(): Promise<string> {
+    let id: any = randomstring.generate({
+      length: 20,
+      charset: 'numeric'
+    });
+    const getUserQuery = `SELECT * FROM "users" WHERE "id"='${id}'`;
+    const user = await this.responseToData(getUserQuery);
+    if (user === []) {
+      this.checkIfIdIsUnique();
+    }
+    return String(id);
+  }
+
+  private async connect(): Promise<void> {
     try {
       await this.client.connect();
       console.log('Connected to PG');
@@ -34,17 +65,18 @@ export class PgClient {
     }
   }
 
-  public async runQuery(query: string) {
-    const result = await this.client.query(query);
+  public async runQuery(query: string): Promise<any> {
+    const result: any = await this.client.query(query);
     return result;
   }
 
-  private async createTables() {
+  private async createTables(): Promise<void> {
     try {
       await this.runQuery(createUsersTable);
       await this.runQuery(createPostsTable);
       await this.runQuery(createCommentsTable);
       await this.runQuery(createPostHistoryTable);
+      await this.runQuery(createCollaboratorsTable);
     } catch (err) {
       console.log('Tables and sequances already exists!');
     }

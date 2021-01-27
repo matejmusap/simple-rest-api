@@ -1,11 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
+import { badRequest } from '../../utils/errorsHandlers';
+import { client } from '../../models';
 
 export default async function handlePutAddAdmin(
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  return res.redirect(`/`);
+  const userId = req.cookies['userId'];
+  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${userId}'`;
+  const userResponse: any = await client.runQuery(queryGetUser);
+  const user: any = userResponse.rows[0];
+  if (user) {
+    const queryUpdateUser = `UPDATE "users" SET "admin"=true WHERE "id"='${userId}'`;
+    await client.runQuery(queryUpdateUser);
+    return res.render('passwordReset');
+  }
+
+  res.cookie('userId', user.id, { httpOnly: true });
+  return badRequest(req, res, 'No user with id');
 }
 
 export const swaggerPaths = {

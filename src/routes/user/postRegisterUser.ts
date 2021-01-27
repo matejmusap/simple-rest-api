@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import argon2 from 'argon2';
 import { client } from '../../models';
-import randomstring from 'randomstring';
 
 interface UserRegister {
   email: string;
@@ -9,35 +8,6 @@ interface UserRegister {
   password: string;
   admin: boolean;
 }
-
-const responseToData = async (query: any): Promise<any[]> => {
-  const response: any = await client.runQuery(query);
-  const data = response.rows[0] ? response.rows : [];
-  return data;
-};
-
-const checkIfIdIsUnique = async () => {
-  let id: any = randomstring.generate({
-    length: 20,
-    charset: 'numeric'
-  });
-  const getUserQuery = `SELECT * FROM "users" WHERE "id"='${id}'`;
-  const user = await responseToData(getUserQuery);
-  if (user === []) {
-    checkIfIdIsUnique();
-  }
-  return String(id);
-};
-
-const setAdmin = async (): Promise<boolean> => {
-  const queryCountUsers = `SELECT COUNT(*) FROM "users"`;
-  const count = await client.runQuery(queryCountUsers);
-
-  if (count.rows[0].count === '0') {
-    return true;
-  }
-  return false;
-};
 
 export default async function handlePostRegisterUser(
   req: Request,
@@ -48,9 +18,9 @@ export default async function handlePostRegisterUser(
 
   const password = await argon2.hash(body.password);
 
-  let admin: boolean = await setAdmin();
+  let admin: boolean = await client.setAdmin();
 
-  const id = await checkIfIdIsUnique();
+  const id = await client.checkIfIdIsUnique();
 
   const query = `INSERT INTO "users" (
                 "id",

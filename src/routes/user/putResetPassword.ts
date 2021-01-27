@@ -1,23 +1,21 @@
 import argon2 from 'argon2';
 import { Request, Response, NextFunction } from 'express';
 import { badRequest } from '../../utils/errorsHandlers';
-import { PgClient } from '../../models';
+import { client } from '../../models';
 
 export default async function handlePutResetPassword(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const pgClient = new PgClient(false);
-
   const userId = req.cookies['userId'];
   const queryGetUser = `SELECT * FROM "users" WHERE "id"='${userId}'`;
-  const userResponse: any = await pgClient.runQuery(queryGetUser);
+  const userResponse: any = await client.runQuery(queryGetUser);
   const user: any = userResponse.rows[0];
   if (user) {
     const password = await argon2.hash(req.body.password);
     const queryUpdateUser = `UPDATE "users" SET "password"=${password} WHERE "id"='${userId}'`;
-    await pgClient.runQuery(queryUpdateUser);
+    await client.runQuery(queryUpdateUser);
     return res.render('passwordReset');
   }
   return badRequest(req, res, 'No user with id');

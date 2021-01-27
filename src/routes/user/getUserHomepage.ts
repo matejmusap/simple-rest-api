@@ -5,31 +5,6 @@ import { client } from '../../models';
 
 require('dotenv').config();
 
-const responseToData = async (query: any): Promise<any[]> => {
-  const response: any = await client.runQuery(query);
-  const data = response.rows[0] ? response.rows : [];
-  return data;
-};
-
-const convert = (array: string[], not: boolean): string => {
-  let str: string = '';
-  const newArr = array.map((e: any) => {
-    if (not) {
-      return `AND NOT "id"='${e}'`;
-    } else {
-      return `AND "id"='${e}'`;
-    }
-  });
-  console.log(newArr);
-  for (let query of newArr) {
-    console.log(query, 'query');
-    console.log(str, 'str');
-    str = `${str} ${query}`;
-    console.log(str, 'str2');
-  }
-  return str;
-};
-
 export default async function handleGetUserHomepage(
   req: Request,
   res: Response,
@@ -39,49 +14,27 @@ export default async function handleGetUserHomepage(
 
   const userQuery = `SELECT * FROM "users" WHERE "id"='${id}';`;
 
-  const users: any = await responseToData(userQuery);
+  const users: any = await client.responseToData(userQuery);
   const user: any = users[0];
 
-  const countUsers: string = `SELECT COUNT (*) FROM "users" WHERE NOT "id"='${id}';`;
-  const countUsersResponse: any = await client.runQuery(countUsers);
-  const count: any = Number(countUsersResponse.rows[0].count);
-
   if (user) {
-    console.log(user.collaborators.length);
-    console.log(count);
     let collaboratorsToRemove: string[] = [];
     let collaboratorsToAdd: string[] = [];
-    if (!!(user.collaborators && user.collaborators.length !== count)) {
-      const collaboratorsToAddQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}'${convert(
-        user.collaborators,
-        true
-      )};`;
-      collaboratorsToAdd = await responseToData(collaboratorsToAddQuery);
-      console.log(collaboratorsToAddQuery);
-    }
 
-    if (!!(user.collaborators && user.collaborators.length)) {
-      const collaboratorsToRemoveQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}'${convert(
-        user.collaborators,
-        false
-      )};`;
-      collaboratorsToRemove = await responseToData(collaboratorsToRemoveQuery);
-      console.log(collaboratorsToRemoveQuery);
-    }
+    const notAdminQuery = `SELECT * FROM "users" WHERE WHERE NOT "id"='${id}' "admin"=false;`;
+    const notAdmin: any = await client.responseToData(notAdminQuery);
 
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
     const commentsQuery = `SELECT * FROM "comments" WHERE "userId"='${id}';`;
 
-    const posts = await responseToData(postsQueries);
-    const comments: any = await responseToData(commentsQuery);
+    const posts = await client.responseToData(postsQueries);
+    const comments: any = await client.responseToData(commentsQuery);
 
     if (req.cookies['my-token']) {
       const decoded: any = jwt.verify(
         req.cookies['my-token'],
         process.env.SECRET_TOKEN_KEY || 'my-token-key'
       );
-      console.log(collaboratorsToAdd);
-      console.log(collaboratorsToRemove);
 
       const responseBody = {
         name: decoded.email,
@@ -89,7 +42,8 @@ export default async function handleGetUserHomepage(
         posts: posts,
         comments: comments,
         collaboratorsToAdd: collaboratorsToAdd,
-        collaboratorsToRemove: collaboratorsToRemove
+        collaboratorsToRemove: collaboratorsToRemove,
+        notAdmin: notAdmin
       };
 
       res.cookie('userId', user.id, { httpOnly: true });

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { PgClient } from '../../models';
+import { client } from '../../models';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import { badRequest } from '../../utils/errorsHandlers';
@@ -16,14 +16,12 @@ export default async function handlePostLoginUser(
   res: Response,
   _next: NextFunction
 ) {
-  const pgClient = new PgClient(false);
-
   const body: LoginUSer = req.body;
 
   const query = `SELECT * FROM "users" WHERE "email"='${body.email}'`;
 
-  const userResponse: any = await pgClient.runQuery(query);
-  const user: any = userResponse.rows[0];
+  const userResponse: any = await client.responseToData(query);
+  const user: any = userResponse[0];
   if (user) {
     const token = jwt.sign(
       {

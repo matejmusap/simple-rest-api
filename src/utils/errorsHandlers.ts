@@ -33,9 +33,7 @@ function badRequest(
   message: Object = 'Bad Request'
 ) {
   console.log(`400 Bad Request (${req.path}): ${message}`);
-  res.status(400).json({
-    message
-  });
+  res.send(message);
 }
 
 export { handle, error404, error500, badRequest };

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import moment from 'moment';
-import { PgClient } from '../../models';
+import { client } from '../../models';
 
 interface NewPost {
   title: string;
@@ -12,8 +12,6 @@ export default async function handlePostNewForm(
   res: Response,
   _next: NextFunction
 ) {
-  const pg = new PgClient(false);
-
   const body: NewPost = req.body;
 
   const userId = req.cookies['userId'];
@@ -30,7 +28,7 @@ export default async function handlePostNewForm(
                             '${createdTime}')
                             RETURNING id;`;
 
-  await pg.runQuery(query);
+  await client.runQuery(query);
   res.cookie('userId', userId, { httpOnly: true });
   res.redirect(`/user/home/${req.cookies['userId']}`);
 }
