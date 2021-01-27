@@ -59,7 +59,7 @@ export const createCollaboratorsTable = `
                         CREATE SEQUENCE "collaborators_id_seq" INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 START 1 CACHE 1;
 
                           CREATE TABLE "public"."collaborators" (
-                            "id" integer DEFAULT nextval('"pcollaborators_id_seq"') NOT NULL,
+                            "id" integer DEFAULT nextval('"collaborators_id_seq"') NOT NULL,
                             "userId" character varying(20) NOT NULL,
                             "collaboratorId" character varying(20) NOT NULL,
                             CONSTRAINT "collaborators_pkey" PRIMARY KEY ("id"),

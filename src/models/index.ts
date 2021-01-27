@@ -71,15 +71,15 @@ export class PgClient {
   }
 
   private async createTables(): Promise<void> {
-    try {
-      await this.runQuery(createUsersTable);
-      await this.runQuery(createPostsTable);
-      await this.runQuery(createCommentsTable);
-      await this.runQuery(createPostHistoryTable);
-      await this.runQuery(createCollaboratorsTable);
-    } catch (err) {
+    // try {
+    await this.runQuery(createUsersTable);
+    await this.runQuery(createPostsTable);
+    await this.runQuery(createCommentsTable);
+    await this.runQuery(createPostHistoryTable);
+    await this.runQuery(createCollaboratorsTable);
+    /* } catch (err) {
       console.log('Tables and sequances already exists!');
-    }
+    } */
   }
 }
 
