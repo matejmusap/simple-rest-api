@@ -5,19 +5,19 @@ interface DeletePost {
   postId: number;
 }
 
-export default async function handleDeletePost(
+export default async function handlePutHidePostPaths(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
   const userId = req.cookies['userId'];
   const body: DeletePost = req.body;
-  const deletePost = `DELETE FROM "posts" WHERE "id"=${body.postId};`;
-  await client.runQuery(deletePost);
+  const hidePostQuery = `UPDATE "posts" SET "blocked"=true WHERE "id"=${body.postId}`;
+  await client.runQuery(hidePostQuery);
 
   res.cookie('userId', userId, { httpOnly: true });
 
-  return res.redirect(`/userHomepage/${userId}`);
+  return res.redirect(`/user/home/${userId}`);
 }
 
 export const swaggerPaths = {
