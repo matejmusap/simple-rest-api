@@ -37,19 +37,14 @@
         <% if(user.admin) {%>
             <a href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Unhide</a>
           <% }%>
-
-
-
-
             <% } else {%>
-
-
-
               <% if(user.admin) {%>
-                <a type='submit' href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Hide</a>
+                <a href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Hide</a>
               <% }%>
+              <% if(post.button) { %>
+                <a type='submit' href="/posts/editForm/<%=post.id%>" class="btn btn-link">EDIT</a>
+                <% } %>
               <p><%=post.content%></p>
-      
               <% if(!post.edited){%>
                 <p>Created: <%=post.createOrEditTime%></p>
                 <% } else {%>
@@ -75,10 +70,6 @@
                   <% }%>
                   <% }%>
                   <% }%>
-
-
-
-
       <% }%>
       <% }%>
       <% }%>

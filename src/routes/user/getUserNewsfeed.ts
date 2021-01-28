@@ -26,7 +26,31 @@ export default async function handleGetUserNewsfeed(
   const getAllCommentsQuery = `SELECT * FROM "comments"`;
   const allPosts = await client.responseToData(getAllPostsQuery);
   const allComments = await client.responseToData(getAllCommentsQuery);
+
+  const getCollaboratorsQuery = `SELECT "userId" FROM "collaborators" WHERE "collaboratorId"='${userId}'`;
+  const collaborators = await client.responseToData(getCollaboratorsQuery);
+  const collaboratorsIds: string[] = [];
+  collaborators.map((e) => {
+    collaboratorsIds.push(`${e.userId}`);
+    return;
+  });
+
   for (let post of allPosts) {
+    post.button = false;
+
+    const buttonConditions: boolean[] = [user.admin, false, false];
+    for (let id of collaboratorsIds) {
+      if (id === post.userId) {
+        buttonConditions[2] = true;
+      }
+    }
+    if (post.userId === user.id) {
+      buttonConditions[1] = true;
+    }
+
+    if (buttonConditions.includes(true)) {
+      post.button = true;
+    }
     const getUsernameQuery = `SELECT "username" FROM "users" WHERE "id"='${post.userId}'`;
     const usernameResponse = await client.responseToData(getUsernameQuery);
     const username = usernameResponse[0].username;

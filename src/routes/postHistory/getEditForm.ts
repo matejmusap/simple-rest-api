@@ -1,26 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import { client } from '../../models';
 
-export default async function handleGetHidePost(
-  req: Request,
+export default async function handleGetEditForm(
+  _req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const userId = req.cookies['userId'];
-  const query = req.query;
-  const postId: string = String(query.postId);
-  const blocked = req.query.blocked;
-  const hidePostQuery = `UPDATE "posts" SET "blocked"=${blocked} WHERE "id"=${postId}`;
-  await client.runQuery(hidePostQuery);
-
-  res.cookie('userId', userId, { httpOnly: true });
-
-  return res.redirect(`/user/newsfeed/${userId}`);
+  const postId = 1;
+  return res.redirect(`/postHistory/edit/${postId}`);
 }
 
 export const swaggerPaths = {
-  tags: ['Post'],
-  summary: 'Update hide field in Post',
+  tags: ['PostHistory'],
+  summary: 'Create PostHistory and update Post',
   parameters: [
     {
       in: 'cookie',
@@ -35,7 +26,7 @@ export const swaggerPaths = {
       }
     },
     {
-      in: 'query',
+      in: 'body',
       name: 'postId',
       description: 'Unique post id',
       required: true,
@@ -46,17 +37,16 @@ export const swaggerPaths = {
         default: null
       }
     },
-    ,
     {
-      in: 'query',
-      name: 'blocked',
-      description: 'Blocked status of post',
+      in: 'body',
+      name: 'content',
+      description: 'Text of Post',
       required: true,
       schema: {
-        type: 'boolean',
-        value: 1,
-        description: 'True or false',
-        default: false
+        type: 'string',
+        value: 'Some text',
+        description: 'Text of post',
+        default: null
       }
     }
   ],

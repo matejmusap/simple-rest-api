@@ -14,6 +14,7 @@ import comments, { swaggerPaths as commentsPaths } from './comments';
 import collaborators, {
   swaggerPaths as collaborationsPaths
 } from './collaborators';
+import postHistory, { swaggerPaths as postHistoryPaths } from './postHistory';
 
 const paths = {
   '/': {
@@ -31,7 +32,8 @@ const paths = {
   ...userPaths,
   ...postsPaths,
   ...commentsPaths,
-  ...collaborationsPaths
+  ...collaborationsPaths,
+  ...postHistoryPaths
 };
 
 const router = Router();
@@ -40,6 +42,7 @@ router.use('/user', user);
 router.use('/posts', posts);
 router.use('/comments', comments);
 router.use('/collaborators', collaborators);
+router.use('/postHistory', postHistory);
 
 const documentation = generateDocumentation(paths);
 
