@@ -63,7 +63,7 @@ export default async function handleGetUserHomepage(
     }
 
     if (user.admin) {
-      const getNoAdminsQuery = `SELECT * FROM "users" WHERE "admin"=false`;
+      const getNoAdminsQuery = `SELECT * FROM "users" WHERE "admin"=false AND "blocked"=false`;
       notAdmin = await client.responseToData(getNoAdminsQuery);
       const getBlockedQuery = `SELECT * FROM "users" WHERE "blocked"=false AND "admin"=false`;
       blocked = await client.responseToData(getBlockedQuery);

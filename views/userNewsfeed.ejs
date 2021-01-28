@@ -38,6 +38,7 @@
         <p>Edited: <%=post.createOrEditTime%></p>
         <% }%>
     <p>Author: <%=post.author%></p>
+    <% if(!user.blocked) { %>
     <form id="body" action="/comments/new" method="POST">
       <div class="mb-3">
         <label for="content">Your comment</label>
@@ -46,6 +47,7 @@
       </div>
       <button type="submit" class="btn btn-primary">Add comment</button>
     </form>
+    <% }%>
     <% if(allComments && allComments.length){%>
       <% for(let comment of allComments){%>
         <% if(comment.postId===post.id){%>
