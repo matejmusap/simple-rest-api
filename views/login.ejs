@@ -46,7 +46,9 @@
       if ( data.hasOwnProperty( 'url' ) ) {
           window.location = data.url;
       }
-  } );
+  } ).catch(err => {
+    console.log('Check if user blocked or password or email')
+  });
 } );
 </Script>
 </body>

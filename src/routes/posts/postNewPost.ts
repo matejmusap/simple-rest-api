@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import moment from 'moment';
+import { badRequest } from '../../utils/errorsHandlers';
 import { client } from '../../models';
 
 interface NewPost {
@@ -34,8 +35,8 @@ export default async function handlePostNewForm(
     await client.runQuery(query);
     res.cookie('userId', userId, { httpOnly: true });
     res.redirect(`/user/home/${req.cookies['userId']}`);
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    return badRequest(req, res, err.detail);
   }
 }
 

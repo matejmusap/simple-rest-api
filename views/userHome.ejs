@@ -27,10 +27,59 @@
 </nav>
 <div class="userHome">
   <h1>Hello <%=user.username%>!</h1>
-  <h2>Your posts: </h2>
+  <%if(user.blocked) {%>
+    <h1>You are blocked by admins!</h1>
+    <% }%>
+  <% if(user.admin){%>
+    <h3>You are admin</h3>
+      <form  id="body" action="/user/addAdmin?_method=PUT" method="POST">
+        <label for="userId">Pick admin</label>
+        <select name="userId" id="userId">
+    <% for(let e of notAdmin){%>
+      <option name="userId" id="userId" value="<%=e.id%>" ><%=e.username%></option>
+      <% }%>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Collaborator</button>
+</form>
+<%if(blocked && blocked.length) {%>
+  <form  id="body" action="/user/blockUser?_method=PUT" method="POST">
+    <label for="userId">BlockUser</label>
+    <select name="userId" id="userId">
+<% for(let e of blocked){%>
+  <option name="userId" id="userId" value="<%=e.id%>" ><%=e.username%></option>
+  <% }%>
+</select>
+<button type="submit" class="btn btn-primary">BlockUser</button>
+</form>
+<% }%>
+<%if(notBlocked && notBlocked.length) {%>
+  <form  id="body" action="/user/blockUser?_method=PUT" method="POST">
+    <label for="userId">Deblock user</label>
+    <select name="userId" id="userId">
+<% for(let e of notBlocked){%>
+  <option name="userId" id="userId" value="<%=e.id%>" ><%=e.username%></option>
+  <% }%>
+</select>
+<button type="submit" class="btn btn-primary">Deblock user</button>
+</form>
+<% }%>
+
+<form  id="body" action="/user/blockUser?_method=PUT" method="POST">
+        <label for="userId">Pick admin</label>
+        <select name="userId" id="userId">
+    <% for(let e of notAdmin){%>
+      <option name="userId" id="userId" value="<%=e.id%>" ><%=e.username%></option>
+      <% }%>
+  </select>
+  <button type="submit" class="btn btn-primary">Add Collaborator</button>
+</form>
+    <% }%>
+    <h2>Your posts: </h2>
+    <% if(!user.blocked) {%>
   <form  action="/posts/new" method="GET">
     <button type='submit' href='/posts/new' class="btn btn-link">Create new post</button>
   </form>
+ 
       <% if(collaboratorsToAdd && collaboratorsToAdd.length){%>
         <form  id="body" action="/collaborators/add" method="POST">
           <label for="collaboratorId">Add Collaborator</label>
@@ -49,10 +98,11 @@
   <% for(let collaborator of collaboratorsToRemove){%>
     <option name="collaboratorId" id="collaboratorId" value="<%=collaborator.id%>" ><%=collaborator.username%></option>
     <% }%>
-</select>
+    </select>
     <button type="submit" class="btn btn-primary">Remove Collaborator</button>
     <% }%>
   </form>
+  <% }%>
     <% if(posts && posts.length){%>
       <% for(let post of posts){%>
         <h4><%=post.title%></h4>
@@ -62,14 +112,16 @@
       <% } else {%>
         <p>Edited: <%=post.createOrEditTime%></p>
         <% }%>
-      <form id="body" action="/comments/new" method="POST">
-        <div class="mb-3">
-          <label for="content">Your comment</label>
-          <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
-          <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Add comment</button>
-      </form>
+        <% if(!user.blocked) {%>
+          <form id="body" action="/comments/new" method="POST">
+            <div class="mb-3">
+              <label for="content">Your comment</label>
+              <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+              <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Add comment</button>
+          </form>
+          <% }%>
       <% if(comments && comments.length){%>
         <% for(let comment of comments){%>
           <% if(comment.postId===post.id){%>

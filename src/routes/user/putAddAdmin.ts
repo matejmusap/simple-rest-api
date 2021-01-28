@@ -8,11 +8,12 @@ export default async function handlePutAddAdmin(
   _next: NextFunction
 ) {
   const userId = req.cookies['userId'];
-  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${userId}'`;
+  const body = req.body;
+  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${body.userId}'`;
   const userResponse: any = await client.runQuery(queryGetUser);
   const user: any = userResponse.rows[0];
   if (user) {
-    const queryUpdateUser = `UPDATE "users" SET "admin"=true WHERE "id"='${userId}'`;
+    const queryUpdateUser = `UPDATE "users" SET "admin"=true WHERE "id"='${body.userId}'`;
     await client.runQuery(queryUpdateUser);
     res.cookie('userId', userId, { httpOnly: true });
     res.redirect(`/user/home/${req.cookies['userId']}`);

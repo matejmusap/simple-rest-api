@@ -24,6 +24,8 @@ export default async function handleGetUserHomepage(
     let collaboratorsToRemove: string[] = [];
     let collaboratorsToAdd: string[] = [];
     let notAdmin: string[] = [];
+    let blocked: string[] = [];
+    let notBlocked: string[] = [];
 
     const collaboratorsQuery = `SELECT "collaboratorId" FROM "collaborators" WHERE "userId"='${id}'`;
     const collaborators = await client.responseToData(collaboratorsQuery);
@@ -36,19 +38,17 @@ export default async function handleGetUserHomepage(
       ? ` AND NOT "id" IN (${arrayOfIds})`
       : '';
 
-    const filterRemoveUsers = arrayOfIds.length
-      ? ` AND "id" IN (${arrayOfIds})`
-      : '';
-
     const collaboratorsToAddQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}' ${filterAddUsers};`;
 
     collaboratorsToAdd = await client.responseToData(collaboratorsToAddQuery);
 
-    const collaboratorsToRemoveQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}' ${filterRemoveUsers};`;
+    if (arrayOfIds.length) {
+      const collaboratorsToRemoveQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}' AND "id" IN (${arrayOfIds});`;
 
-    collaboratorsToRemove = await client.responseToData(
-      collaboratorsToRemoveQuery
-    );
+      collaboratorsToRemove = await client.responseToData(
+        collaboratorsToRemoveQuery
+      );
+    }
 
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
     const commentsQuery = `SELECT * FROM "comments";`;
@@ -60,6 +60,15 @@ export default async function handleGetUserHomepage(
       const usernameResponse = await client.responseToData(getUsernameQuery);
       const username = usernameResponse[0].username;
       comment.author = username;
+    }
+
+    if (user.admin) {
+      const getNoAdminsQuery = `SELECT * FROM "users" WHERE "admin"=false`;
+      notAdmin = await client.responseToData(getNoAdminsQuery);
+      const getBlockedQuery = `SELECT * FROM "users" WHERE "blocked"=false AND "admin"=false`;
+      blocked = await client.responseToData(getBlockedQuery);
+      const getNotBlockedQuery = `SELECT * FROM "users" WHERE "blocked"=true AND "admin"=false`;
+      notBlocked = await client.responseToData(getNotBlockedQuery);
     }
 
     if (req.cookies['my-token']) {
@@ -75,7 +84,9 @@ export default async function handleGetUserHomepage(
         countAllUsers,
         collaboratorsToAdd,
         collaboratorsToRemove,
-        notAdmin
+        notAdmin,
+        blocked,
+        notBlocked
       };
 
       res.cookie('userId', user.id, { httpOnly: true });
