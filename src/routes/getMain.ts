@@ -9,10 +9,11 @@ export default function handleGetMain(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['Main'],
+  summary: 'Render Main Page',
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Render main page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

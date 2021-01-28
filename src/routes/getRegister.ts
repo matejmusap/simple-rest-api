@@ -9,10 +9,11 @@ export default function handleGetRegister(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['Main'],
+  summary: 'Render Register Page',
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Render register page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

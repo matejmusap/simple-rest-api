@@ -22,10 +22,37 @@ export default async function handlePutResetPassword(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['User'],
+  summary: 'Send password reset data',
+  parameters: [
+    {
+      in: 'body',
+      name: 'password',
+      description: 'New password. Will be saved in hased format',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'Newpassord!',
+        description: 'New passord',
+        default: null
+      }
+    },
+    {
+      in: 'cookie',
+      name: 'userId',
+      description: 'Unique user id',
+      required: true,
+      schema: {
+        type: 'string',
+        value: '02588894428963778215',
+        description: '20 numbers digit as string',
+        default: null
+      }
+    }
+  ],
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Redirect to PasswordReset Page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

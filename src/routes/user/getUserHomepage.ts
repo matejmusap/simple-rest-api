@@ -89,10 +89,37 @@ export default async function handleGetUserHomepage(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['User'],
+  summary: 'Get user home page',
   produces: ['application/json'],
+  parameters: [
+    {
+      in: 'cookie',
+      name: 'userId',
+      description: 'Unique user id',
+      required: true,
+      schema: {
+        type: 'string',
+        value: '02588894428963778215',
+        description: '20 numbers digit as string',
+        default: null
+      }
+    },
+    {
+      in: 'cookie',
+      name: 'my-token',
+      description: 'Unique token thats confirms uses',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'sdgfdsa4879trh/GHIGHD/(E3rg3w7ifiwz78h/gf4IU',
+        description: 'Random string',
+        default: null
+      }
+    }
+  ],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Render user home page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

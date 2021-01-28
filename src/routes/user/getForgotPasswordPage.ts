@@ -30,10 +30,11 @@ export default async function handleGetResetPasswordPage(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['Main'],
+  summary: 'Get to forgot passowrd input field',
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Render Reset Password Page page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

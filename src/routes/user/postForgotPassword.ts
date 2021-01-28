@@ -54,12 +54,26 @@ export default async function handlePostLoginUser(
   }
   return badRequest(req, res, 'No user with provided email');
 }
-
 export const swaggerPaths = {
-  summary: 'Post',
+  tags: ['User'],
+  summary: 'Send Password reset name and renderforgot Message',
   produces: ['application/json'],
+  parameters: [
+    {
+      in: 'body',
+      name: 'email',
+      description: 'Unique email',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'email@email.com',
+        description: 'Email will be sent to adress',
+        default: null
+      }
+    }
+  ],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Render forgot Message page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

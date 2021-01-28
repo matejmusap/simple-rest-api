@@ -21,10 +21,37 @@ export default async function handleDeleteRemoveCollaboration(
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['Collaborations'],
+  summary: 'Delete Collaborations with another user',
+  parameters: [
+    {
+      in: 'cookie',
+      name: 'userId',
+      description: 'Unique user id',
+      required: true,
+      schema: {
+        type: 'string',
+        value: '02588894428963778215',
+        description: '20 numbers digit as string',
+        default: null
+      }
+    },
+    {
+      in: 'body',
+      name: 'collaboratorId',
+      description: 'Unique user id of other user',
+      required: true,
+      schema: {
+        type: 'string',
+        value: '02588894428963778215',
+        description: '20 numbers digit as string',
+        default: null
+      }
+    }
+  ],
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Redirect to User home Page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

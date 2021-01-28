@@ -43,10 +43,48 @@ export default async function handlePostRegisterUser(
 }
 
 export const swaggerPaths = {
-  summary: 'Post',
+  tags: ['User'],
+  summary: 'Register User',
+  parameters: [
+    {
+      in: 'body',
+      name: 'username',
+      description: 'Unique username',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'nameSurname',
+        default: null
+      }
+    },
+    {
+      in: 'body',
+      name: 'email',
+      description: 'Unique email',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'email@email.com',
+        description: 'Must be in email format',
+        default: null
+      }
+    },
+    {
+      in: 'body',
+      name: 'password',
+      description: 'Password Will be saved in hased format',
+      required: true,
+      schema: {
+        type: 'string',
+        value: 'password',
+        description: 'New passord',
+        default: null
+      }
+    }
+  ],
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Redirect to main page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

@@ -19,15 +19,29 @@ export default async function handlePutAddAdmin(
     res.redirect(`/user/home/${req.cookies['userId']}`);
   }
 
-  res.cookie('userId', user.id, { httpOnly: true });
   return badRequest(req, res, 'No user with id');
 }
 
 export const swaggerPaths = {
-  summary: 'Get',
+  tags: ['User'],
+  summary: 'Update blocked field in User',
+  parameters: [
+    {
+      in: 'cookie',
+      name: 'userId',
+      description: 'Unique user id',
+      required: true,
+      schema: {
+        type: 'string',
+        value: '02588894428963778215',
+        description: '20 numbers digit as string',
+        default: null
+      }
+    }
+  ],
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Redirect to User home Page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

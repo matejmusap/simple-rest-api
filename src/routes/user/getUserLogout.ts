@@ -9,10 +9,11 @@ export default function handleGetUserLogut(
 }
 
 export const swaggerPaths = {
-  summary: 'Post',
+  tags: ['Main'],
+  summary: 'Get to Main Page',
   produces: ['application/json'],
   responses: {
-    200: { description: 'OK' },
+    200: { description: 'Redirect to main page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }
