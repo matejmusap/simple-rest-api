@@ -1,23 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { client } from '../../models';
 
-interface DeletePost {
-  postId: number;
-}
-
-export default async function handlePutHidePostPaths(
+export default async function handleGetHidePost(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
   const userId = req.cookies['userId'];
-  const body: DeletePost = req.body;
-  const hidePostQuery = `UPDATE "posts" SET "blocked"=true WHERE "id"=${body.postId}`;
+  const query = req.query;
+  console.log(query);
+  const postId: string = String(query.postId);
+  const blocked = req.query.blocked;
+  console.log(blocked);
+  const hidePostQuery = `UPDATE "posts" SET "blocked"=${blocked} WHERE "id"=${postId}`;
   await client.runQuery(hidePostQuery);
 
   res.cookie('userId', userId, { httpOnly: true });
 
-  return res.redirect(`/user/home/${userId}`);
+  return res.redirect(`/user/newsfeed/${userId}`);
 }
 
 export const swaggerPaths = {
@@ -37,7 +37,7 @@ export const swaggerPaths = {
       }
     },
     {
-      in: 'body',
+      in: 'query',
       name: 'postId',
       description: 'Unique post id',
       required: true,
@@ -46,6 +46,19 @@ export const swaggerPaths = {
         value: 1,
         description: 'Unique post id',
         default: null
+      }
+    },
+    ,
+    {
+      in: 'query',
+      name: 'blocked',
+      description: 'Blocked status of post',
+      required: true,
+      schema: {
+        type: 'boolean',
+        value: 1,
+        description: 'True or false',
+        default: false
       }
     }
   ],

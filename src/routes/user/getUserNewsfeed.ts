@@ -11,9 +11,7 @@ export default async function handleGetUserNewsfeed(
   _next: NextFunction
 ) {
   const userId = req.cookies['userId'];
-  const userQuery = `SELECT * FROM "users" WHERE "id"='${userId}'`;
-  const userResponse = await client.responseToData(userQuery);
-  const user = userResponse[0];
+  const user: any = await client.getUser(userId);
   const getBlockedIdsQuery = `SELECT id FROM "users" WHERE "blocked"=true;`;
   const getBlockedIds = await client.responseToData(getBlockedIdsQuery);
   const arrayOfIds: string[] = [];
@@ -24,9 +22,7 @@ export default async function handleGetUserNewsfeed(
   const filterBlocked = arrayOfIds.length
     ? `WHERE NOT "userId" IN (${arrayOfIds})`
     : '';
-  console.log(arrayOfIds);
-  const getAllPostsQuery = `SELECT * FROM "posts" ${filterBlocked}`;
-  console.log(getAllPostsQuery);
+  const getAllPostsQuery = `SELECT * FROM "posts" ${filterBlocked} ORDER BY "id" DESC`;
   const getAllCommentsQuery = `SELECT * FROM "comments"`;
   const allPosts = await client.responseToData(getAllPostsQuery);
   const allComments = await client.responseToData(getAllCommentsQuery);

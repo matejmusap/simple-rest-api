@@ -9,9 +9,7 @@ export default async function handlePutResetPassword(
   _next: NextFunction
 ) {
   const userId = req.cookies['userId'];
-  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${userId}'`;
-  const userResponse: any = await client.runQuery(queryGetUser);
-  const user: any = userResponse.rows[0];
+  const user: any = await client.getUser(userId);
   if (user) {
     const password = await argon2.hash(req.body.password);
     const queryUpdateUser = `UPDATE "users" SET "password"='${password}' WHERE "id"='${userId}'`;

@@ -43,6 +43,13 @@ export class PgClient {
     return data;
   }
 
+  public async getUser(id: string): Promise<any> {
+    const getUserQuery = `SELECT * FROM "users" WHERE "id"='${id}'`;
+    const response: any = await this.runQuery(getUserQuery);
+    const user = response.rows[0] ? response.rows[0] : null;
+    return user;
+  }
+
   public async checkIfIdIsUnique(): Promise<string> {
     let id: any = randomstring.generate({
       length: 20,

@@ -9,9 +9,9 @@ import handlePostNewForm, {
 import handlePutEditPost, {
   swaggerPaths as putEditPostPaths
 } from './putEditPost';
-import handlePutHidePostPaths, {
-  swaggerPaths as putHidePostPaths
-} from './putHidePost';
+import handleGetHidePost, {
+  swaggerPaths as getHidePostPaths
+} from './getHidePost';
 
 export const swaggerPaths = {
   '/posts/new': {
@@ -22,7 +22,7 @@ export const swaggerPaths = {
     put: putEditPostPaths
   },
   '/posts/hide': {
-    put: putHidePostPaths
+    get: getHidePostPaths
   }
 };
 
@@ -31,6 +31,6 @@ const router = Router();
 router.get('/new', handle(handleGetNewPostForm));
 router.post('/new', handle(handlePostNewForm));
 router.put('/editPost', handle(handlePutEditPost));
-router.put('/hide', handle(handlePutHidePostPaths));
+router.get('/hide', handle(handleGetHidePost));
 
 export default router;

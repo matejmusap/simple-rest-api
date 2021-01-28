@@ -9,9 +9,7 @@ export default async function handlePutAddAdmin(
 ) {
   const userId = req.cookies['userId'];
   const body = req.body;
-  const queryGetUser = `SELECT * FROM "users" WHERE "id"='${body.userId}'`;
-  const userResponse: any = await client.runQuery(queryGetUser);
-  const user: any = userResponse.rows[0];
+  const user: any = await client.getUser(body.userId);
   if (user) {
     const blockUpdate: boolean = !user.blocked;
     const queryUpdateUser = `UPDATE "users" SET "blocked"=${blockUpdate} WHERE "id"='${body.userId}'`;

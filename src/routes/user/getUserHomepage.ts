@@ -12,11 +12,9 @@ export default async function handleGetUserHomepage(
 ) {
   const id = req.params.id;
 
-  const userQuery = `SELECT * FROM "users" WHERE "id"='${id}';`;
   const getAllUsersQuery = `SELECT COUNT(*) FROM "users" WHERE NOT "id"='${id}';`;
 
-  const userResponse: any = await client.responseToData(userQuery);
-  const user: any = userResponse[0];
+  const user: any = await client.getUser(id);
   const getAllUsers: any = await client.responseToData(getAllUsersQuery);
   const countAllUsers = Number(getAllUsers[0].count);
 

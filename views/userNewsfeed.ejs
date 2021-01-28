@@ -31,34 +31,58 @@
   <% if(allPosts && allPosts.length){%>
     <% for(let post of allPosts){%>
       <h4><%=post.title%></h4>
-    <p><%=post.content%></p>
-    <% if(!post.edited){%>
-      <p>Created: <%=post.createOrEditTime%></p>
-      <% } else {%>
-        <p>Edited: <%=post.createOrEditTime%></p>
-        <% }%>
-    <p>Author: <%=post.author%></p>
-    <% if(!user.blocked) { %>
-    <form id="body" action="/comments/new" method="POST">
-      <div class="mb-3">
-        <label for="content">Your comment</label>
-        <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
-        <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary">Add comment</button>
-    </form>
-    <% }%>
-    <% if(allComments && allComments.length){%>
-      <% for(let comment of allComments){%>
-        <% if(comment.postId===post.id){%>
-        <p><%=comment.content%></p>
-        <p>author: <%=comment.author%></p>
-        <p>Created: <%=comment.createTime%></p>
-        <% }%>
-        <% }%>
-        <% }%>
+      <% if(post.blocked) {%>
+
+        <h4>THIS POST IS HIDDEN BY ADMIN</h4>
+        <% if(user.admin) {%>
+            <a href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Unhide</a>
+          <% }%>
+
+
+
+
+            <% } else {%>
+
+
+
+              <% if(user.admin) {%>
+                <a type='submit' href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Hide</a>
+              <% }%>
+              <p><%=post.content%></p>
+      
+              <% if(!post.edited){%>
+                <p>Created: <%=post.createOrEditTime%></p>
+                <% } else {%>
+                  <p>Edited: <%=post.createOrEditTime%></p>
+                  <% }%>
+              <p>Author: <%=post.author%></p>
+              <% if(!user.blocked) { %>
+              <form id="body" action="/comments/new" method="POST">
+                <div class="mb-3">
+                  <label for="content">Your comment</label>
+                  <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
+                  <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Add comment</button>
+              </form>
+              <% }%>
+              <% if(allComments && allComments.length){%>
+                <% for(let comment of allComments){%>
+                  <% if(comment.postId===post.id){%>
+                  <p><%=comment.content%></p>
+                  <p>author: <%=comment.author%></p>
+                  <p>Created: <%=comment.createTime%></p>
+                  <% }%>
+                  <% }%>
+                  <% }%>
+
+
+
+
       <% }%>
       <% }%>
+      <% }%>
+
 
     </div>
     
