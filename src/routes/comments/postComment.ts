@@ -14,21 +14,21 @@ export default async function handlePostComment(
 ) {
   const body: NewComment = req.body;
   const userId = req.cookies['userId'];
-  const createdTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
+  const createTime: string = moment().format('MMMM Do YYYY, h:mm:ss a');
 
   const query = `INSERT INTO "comments" (
                 "content",
                 "userId",
                 "postId",
-                "createdTime"
+                "createTime"
                 ) VALUES ('${body.content}',
                           '${userId}',
                           ${body.postId},
-                          '${createdTime}')
+                          '${createTime}')
                           RETURNING id;`;
 
   await client.runQuery(query);
-  res.redirect(`/user/home/${req.cookies['userId']}`);
+  res.redirect(`/user/newsfeed/${req.cookies['userId']}`);
 }
 
 export const swaggerPaths = {

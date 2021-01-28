@@ -64,7 +64,5 @@ export const createCollaboratorsTable = `
                             "id" integer DEFAULT nextval('"collaborators_id_seq"') NOT NULL,
                             "userId" character varying(20) NOT NULL,
                             "collaboratorId" character varying(20) NOT NULL,
-                            CONSTRAINT "collaborators_pkey" PRIMARY KEY ("id"),
-                            CONSTRAINT "collaborators_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
-                            CONSTRAINT "collaborators_collaboratorId_fkey" FOREIGN KEY ("collaboratorId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE
+                            CONSTRAINT "collaborators_pkey" PRIMARY KEY ("id")
                           ) WITH (oids = false);`;

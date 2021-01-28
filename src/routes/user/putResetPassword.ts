@@ -14,7 +14,7 @@ export default async function handlePutResetPassword(
   const user: any = userResponse.rows[0];
   if (user) {
     const password = await argon2.hash(req.body.password);
-    const queryUpdateUser = `UPDATE "users" SET "password"=${password} WHERE "id"='${userId}'`;
+    const queryUpdateUser = `UPDATE "users" SET "password"='${password}' WHERE "id"='${userId}'`;
     await client.runQuery(queryUpdateUser);
     return res.render('passwordReset');
   }

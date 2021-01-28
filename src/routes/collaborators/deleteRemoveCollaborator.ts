@@ -17,7 +17,7 @@ export default async function handleDeleteRemoveCollaboration(
 
   res.cookie('userId', userId, { httpOnly: true });
 
-  return res.redirect(`/userHomepage/${userId}`);
+  return res.redirect(`/user/home/${userId}`);
 }
 
 export const swaggerPaths = {

@@ -13,14 +13,42 @@ export default async function handleGetUserHomepage(
   const id = req.params.id;
 
   const userQuery = `SELECT * FROM "users" WHERE "id"='${id}';`;
+  const getAllUsersQuery = `SELECT COUNT(*) FROM "users" WHERE NOT "id"='${id}';`;
 
-  const users: any = await client.responseToData(userQuery);
-  const user: any = users[0];
+  const userResponse: any = await client.responseToData(userQuery);
+  const user: any = userResponse[0];
+  const getAllUsers: any = await client.responseToData(getAllUsersQuery);
+  const countAllUsers = Number(getAllUsers[0].count);
 
   if (user) {
     let collaboratorsToRemove: string[] = [];
     let collaboratorsToAdd: string[] = [];
     let notAdmin: string[] = [];
+
+    const collaboratorsQuery = `SELECT "collaboratorId" FROM "collaborators" WHERE "userId"='${id}'`;
+    const collaborators = await client.responseToData(collaboratorsQuery);
+    const arrayOfIds: string[] = [];
+    collaborators.map((e) => {
+      arrayOfIds.push(`'${e.collaboratorId}'`);
+      return;
+    });
+    const filterAddUsers = arrayOfIds.length
+      ? ` AND NOT "id" IN (${arrayOfIds})`
+      : '';
+
+    const filterRemoveUsers = arrayOfIds.length
+      ? ` AND "id" IN (${arrayOfIds})`
+      : '';
+
+    const collaboratorsToAddQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}' ${filterAddUsers};`;
+
+    collaboratorsToAdd = await client.responseToData(collaboratorsToAddQuery);
+
+    const collaboratorsToRemoveQuery = `SELECT * FROM "users" WHERE NOT "id"='${id}' ${filterRemoveUsers};`;
+
+    collaboratorsToRemove = await client.responseToData(
+      collaboratorsToRemoveQuery
+    );
 
     const postsQueries = `SELECT * FROM "posts" WHERE "userId"='${id}';`;
     const commentsQuery = `SELECT * FROM "comments";`;
@@ -39,12 +67,12 @@ export default async function handleGetUserHomepage(
         req.cookies['my-token'],
         process.env.SECRET_TOKEN_KEY || 'my-token-key'
       );
-
       const responseBody = {
         name: decoded.email,
         user,
         posts,
         comments,
+        countAllUsers,
         collaboratorsToAdd,
         collaboratorsToRemove,
         notAdmin

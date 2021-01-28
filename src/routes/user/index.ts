@@ -27,6 +27,9 @@ import handleGetUserNewsfeed, {
 import handlePutBlockUser, {
   swaggerPaths as putBlockUserPaths
 } from './putBlockUser';
+import handleGetUserLogut, {
+  swaggerPaths as getUserLogoutPaths
+} from './getUserLogout';
 
 export const swaggerPaths = {
   '/user/register': {
@@ -55,6 +58,9 @@ export const swaggerPaths = {
   },
   '/user/blockUser': {
     put: putBlockUserPaths
+  },
+  '/user/logout': {
+    get: getUserLogoutPaths
   }
 };
 
@@ -66,6 +72,7 @@ router.post('/forgot', handle(handlePostForgotPassword));
 router.get('/home/:id', handle(handleGetUserHomepage));
 router.get('/reset/:token', handle(handleGetResetPasswordPage));
 router.get('/newsfeed/:id', handle(handleGetUserNewsfeed));
+router.get('/logout', handle(handleGetUserLogut));
 router.put('/resetPassword', handle(handlePutResetPassword));
 router.put('/addAdmin', handle(handlePutAddAdmin));
 router.put('/blockUser', handle(handlePutBlockUser));

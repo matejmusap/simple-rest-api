@@ -20,6 +20,9 @@
       <li class="nav-item active">
         <a class="nav-link" href="/user/newsfeed/<%=user.id%>">Newsfeed </a>
       </li>
+      <li class="nav-item active" >
+        <a class="nav-link" href="/">Logout </a>
+      </li>
   </div>
 </nav>
 <div class="userHome">
@@ -28,7 +31,28 @@
   <form  action="/posts/new" method="GET">
     <button type='submit' href='/posts/new' class="btn btn-link">Create new post</button>
   </form>
-  <div class="posts">
+      <% if(collaboratorsToAdd && collaboratorsToAdd.length){%>
+        <form  id="body" action="/collaborators/add" method="POST">
+          <label for="collaboratorId">Add Collaborator</label>
+          <select name="collaboratorId" id="collaboratorId">
+      <% for(let collaborator of collaboratorsToAdd){%>
+        <option name="collaboratorId" id="collaboratorId" value="<%=collaborator.id%>" ><%=collaborator.username%></option>
+        <% }%>
+    </select>
+    <button type="submit" class="btn btn-primary">Add Collaborator</button>
+  </form>
+    <% }%>
+    <% if(collaboratorsToRemove && collaboratorsToRemove.length){%>
+    <form  id="body" action="/collaborators/remove?_method=DELETE" method="POST">
+      <label for="collaboratorId">Remove Collaborator</label>
+      <select name="collaboratorId" id="collaboratorId">
+  <% for(let collaborator of collaboratorsToRemove){%>
+    <option name="collaboratorId" id="collaboratorId" value="<%=collaborator.id%>" ><%=collaborator.username%></option>
+    <% }%>
+</select>
+    <button type="submit" class="btn btn-primary">Remove Collaborator</button>
+    <% }%>
+  </form>
     <% if(posts && posts.length){%>
       <% for(let post of posts){%>
         <h4><%=post.title%></h4>
@@ -51,14 +75,12 @@
           <% if(comment.postId===post.id){%>
           <p><%=comment.content%></p>
           <p>author: <%=comment.author%></p>
-          <p>Created: <%=comment.createdTime%></p>
+          <p>Created: <%=comment.createTime%></p>
           <% }%>
           <% }%>
           <% }%>
         <% }%>
         <% }%>
-
-    </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" 
