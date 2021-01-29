@@ -54,9 +54,10 @@
                 <p>Created: <%=post.createOrEditTime%></p>
                 <% } else {%>
                   <p>Edited: <%=post.createOrEditTime%></p>
+                  <p>EditedBy: <%=post.editUsername%></p>
                   <a href="/postHistory/historyView/<%=post.id%>" class="btn btn-primary">Show history</a>
                   <% }%>
-              <p>Author: <%=post.author%></p>
+                  <p>Owner: <%=post.author%></p>
               <% if(!user.blocked) { %>
               <form id="body" action="/comments/new" method="POST">
                 <div class="mb-3">

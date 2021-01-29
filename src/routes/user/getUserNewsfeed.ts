@@ -27,7 +27,7 @@ export default async function handleGetUserNewsfeed(
   const allPosts = await client.responseToData(getAllPostsQuery);
   const allComments = await client.responseToData(getAllCommentsQuery);
 
-  const getCollaboratorsQuery = `SELECT "userId" FROM "collaborators" WHERE "collaboratorId"='${userId}'`;
+  const getCollaboratorsQuery = `SELECT "userId" FROM "collaborators" WHERE "collaboratorId"='${userId}';`;
   const collaborators = await client.responseToData(getCollaboratorsQuery);
   const collaboratorsIds: string[] = [];
   collaborators.map((e) => {
@@ -36,9 +36,18 @@ export default async function handleGetUserNewsfeed(
   });
 
   for (let post of allPosts) {
+    if (post.edited) {
+      const userEditUsernameQuery = `SELECT "username" FROM "users" WHERE "id"='${post.editUserId}';`;
+      const editUsernameResponse = await client.responseToData(
+        userEditUsernameQuery
+      );
+      post.editUsername = editUsernameResponse[0].username;
+    }
+
     post.button = false;
 
     const buttonConditions: boolean[] = [user.admin, false, false];
+
     for (let id of collaboratorsIds) {
       if (id === post.userId) {
         buttonConditions[2] = true;

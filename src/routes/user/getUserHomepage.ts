@@ -52,6 +52,15 @@ export default async function handleGetUserHomepage(
     const commentsQuery = `SELECT * FROM "comments";`;
 
     const posts = await client.responseToData(postsQueries);
+    for (let post of posts) {
+      if (post.edited) {
+        const userEditUsernameQuery = `SELECT "username" FROM "users" WHERE "id"='${post.editUserId}';`;
+        const editUsernameResponse = await client.responseToData(
+          userEditUsernameQuery
+        );
+        post.editUsername = editUsernameResponse[0].username;
+      }
+    }
     const comments: any = await client.responseToData(commentsQuery);
     for (let comment of comments) {
       const getUsernameQuery = `SELECT "username" FROM "users" WHERE "id"='${comment.userId}'`;

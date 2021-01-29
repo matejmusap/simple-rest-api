@@ -4,9 +4,9 @@
   <h1><%=post.title%></h1>
   <% if(postHistory && postHistory.length){%>
     <% for(let edit of postHistory){%>
-      <h4><%=edit.author%></h4>
-      <h4><%=edit.lastEditTime%></h4>
-      <h4><%=edit.oldContent%></h4>
+      <h4>EditedBy: <%=edit.author%></h4>
+      <h4>Old Content created at: <%=edit.lastEditTime%></h4>
+      <h4>Old Content: <%=edit.oldContent%></h4>
       <% }%>
 
     <% }%>

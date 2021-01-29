@@ -13,7 +13,7 @@ export default async function handleGetHistoryView(
   const postResponse = await client.responseToData(getPostQuerie);
   const post = postResponse[0];
 
-  const getPostHistoryQueries = `SELECT * FROM "postHistory" WHERE "postId"=${postId}`;
+  const getPostHistoryQueries = `SELECT * FROM "postHistory" WHERE "postId"=${postId} ORDER By "id" DESC`;
   const postHistory: any = await client.responseToData(getPostHistoryQueries);
 
   for (let edit of postHistory) {

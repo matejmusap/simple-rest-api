@@ -23,10 +23,12 @@ export const createPostsTable = `
                           "createOrEditTime" character varying(255) NOT NULL,
                           "blocked" boolean DEFAULT false,
                           "edited" boolean DEFAULT false,
+                          "editUserId" character varying(20) NOT NULL,
                           CONSTRAINT "posts_pkey" PRIMARY KEY ("id"),
                           CONSTRAINT "posts_id_key" UNIQUE ("id"),
                           CONSTRAINT "posts_title_key" UNIQUE ("title"),
-                          CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
+                          CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE,
+                          CONSTRAINT "posts_editUserId_fkey" FOREIGN KEY ("editUserId") REFERENCES users(id) ON DELETE CASCADE
                         ) WITH (oids = false);`;
 
 export const createCommentsTable = `

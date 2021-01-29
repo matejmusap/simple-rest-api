@@ -99,12 +99,13 @@
       <% for(let post of posts){%>
         <h4><%=post.title%></h4>
       <p><%=post.content%></p>
+        <a type='submit' href="/postHistory/editForm/<%=post.id%>" class="btn btn-link">EDIT</a>
     <% if(!post.edited){%>
       <p>Created: <%=post.createOrEditTime%></p>
       <% } else {%>
         <p>Edited: <%=post.createOrEditTime%></p>
+        <p>EditedBy: <%=post.editUsername%></p>
         <a href="/postHistory/historyView/<%=post.id%>" class="btn btn-primary">Show history</a>
-
         <% }%>
         <% if(!user.blocked) {%>
           <form id="body" action="/comments/new" method="POST">
