@@ -1,23 +1,32 @@
 import { Request, Response, NextFunction } from 'express';
+import { badRequest } from '../../utils/errorsHandlers';
 import { client } from '../../models';
 
-export default async function handleGetEditForm(
+export default async function handleDeletePost(
   req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const userId = req.cookies['userId'];
-  const postId = Number(req.params.postId);
-  const postQuery = `SELECT * FROM "posts" WHERE "id"=${postId}`;
-  const postResponse: any = await client.responseToData(postQuery);
-  const post = postResponse[0];
-  const renderBody = { post, userId };
-  return res.render(`editForm`, renderBody);
+  try {
+    const userId = req.cookies['userId'];
+    console.log;
+    console.log(req.body);
+    console.log(req.params);
+    const deletePost = `DELETE FROM "posts" WHERE "id"=${Number(
+      req.params.postId
+    )};`;
+    await client.runQuery(deletePost);
+
+    res.cookie('userId', userId, { httpOnly: true });
+    return res.redirect(`/user/newsFeed/${userId}`);
+  } catch (err) {
+    return badRequest(req, res, 'Problem with deleting post!');
+  }
 }
 
 export const swaggerPaths = {
-  tags: ['PostHistory'],
-  summary: 'Create PostHistory and update Post',
+  tags: ['Post'],
+  summary: 'Delete Post with comments',
   parameters: [
     {
       in: 'cookie',
@@ -32,33 +41,21 @@ export const swaggerPaths = {
       }
     },
     {
-      in: 'body',
+      in: 'path',
       name: 'postId',
       description: 'Unique post id',
       required: true,
       schema: {
-        type: 'integer',
+        type: 'ineteger',
         value: 1,
-        description: 'Unique post id',
-        default: null
-      }
-    },
-    {
-      in: 'body',
-      name: 'content',
-      description: 'Text of Post',
-      required: true,
-      schema: {
-        type: 'string',
-        value: 'Some text',
-        description: 'Text of post',
+        description: 'Post id',
         default: null
       }
     }
   ],
   produces: ['application/json'],
   responses: {
-    200: { description: 'Redirect to User home Page' },
+    200: { description: 'Redirect to User News Page' },
     400: { description: 'Bad request.' },
     404: { description: 'Requested resource not found' },
     500: { description: 'Internal server error' }

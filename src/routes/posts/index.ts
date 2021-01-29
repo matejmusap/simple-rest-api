@@ -9,6 +9,9 @@ import handlePostNewForm, {
 import handleGetHidePost, {
   swaggerPaths as getHidePostPaths
 } from './getHidePost';
+import handleDeletePost, {
+  swaggerPaths as deletePostPaths
+} from './deletePost';
 
 export const swaggerPaths = {
   '/posts/new': {
@@ -17,14 +20,17 @@ export const swaggerPaths = {
   },
   '/posts/hide': {
     get: getHidePostPaths
+  },
+  '/posts/delete/{postId}': {
+    delete: deletePostPaths
   }
 };
 
 const router = Router();
 
 router.get('/new', handle(handleGetNewPostForm));
-router.get('/new', handle(handleGetNewPostForm));
 router.post('/new', handle(handlePostNewForm));
 router.get('/hide', handle(handleGetHidePost));
+router.delete('/delete/:postId', handle(handleDeletePost));
 
 export default router;

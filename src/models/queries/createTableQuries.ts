@@ -26,7 +26,7 @@ export const createPostsTable = `
                           CONSTRAINT "posts_pkey" PRIMARY KEY ("id"),
                           CONSTRAINT "posts_id_key" UNIQUE ("id"),
                           CONSTRAINT "posts_title_key" UNIQUE ("title"),
-                          CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE
+                          CONSTRAINT "posts_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE
                         ) WITH (oids = false);`;
 
 export const createCommentsTable = `
@@ -39,8 +39,8 @@ export const createCommentsTable = `
                             "postId" integer NOT NULL,
                             "createTime" character varying(255) NOT NULL,
                             CONSTRAINT "comments_pkey" PRIMARY KEY ("id"),
-                            CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
-                            CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE NOT DEFERRABLE
+                            CONSTRAINT "comments_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE,
+                            CONSTRAINT "comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON DELETE CASCADE
                           ) WITH (oids = false);`;
 
 export const createPostHistoryTable = `
@@ -53,8 +53,8 @@ export const createPostHistoryTable = `
                             "lastEditTime" character varying(255) NOT NULL,
                             "oldContent" character varying(255) NOT NULL,
                             CONSTRAINT "postHistory_pkey" PRIMARY KEY ("id"),
-                            CONSTRAINT "postHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE NOT DEFERRABLE,
-                            CONSTRAINT "postHistory_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON UPDATE CASCADE NOT DEFERRABLE
+                            CONSTRAINT "postHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON DELETE CASCADE,
+                            CONSTRAINT "postHistory_postId_fkey" FOREIGN KEY ("postId") REFERENCES posts(id) ON DELETE CASCADE
                           ) WITH (oids = false);`;
 
 export const createCollaboratorsTable = `

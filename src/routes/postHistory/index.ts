@@ -11,7 +11,7 @@ import handleGetHistoryView, {
 } from './getHistoryView';
 
 export const swaggerPaths = {
-  '/postHistory/new/{postId}': {
+  '/postHistory/editForm/{postId}': {
     get: getEditFormPaths
   },
   '/postHistory/editPost': {
@@ -24,7 +24,7 @@ export const swaggerPaths = {
 
 const router = Router();
 
-router.get('/new/:postId', handle(handleGetEditForm));
+router.get('/editForm/:postId', handle(handleGetEditForm));
 router.get('/historyView/:postId', handle(handleGetHistoryView));
 router.put('/editPost', handle(handlePutEditPost));
 

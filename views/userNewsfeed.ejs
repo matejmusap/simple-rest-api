@@ -41,8 +41,13 @@
               <% if(user.admin) {%>
                 <a href="/posts/hide?postId=<%=post.id%>&blocked=<%=!post.blocked%>" class="btn btn-link">Hide</a>
               <% }%>
+              <% if(post.userId === user.id) {%>
+                <form action="/posts/delete/<%=post.id%>?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-primary">DELETE</button>
+                </form>
+              <% }%>
               <% if(post.button) { %>
-                <a type='submit' href="/posts/editForm/<%=post.id%>" class="btn btn-link">EDIT</a>
+                <a type='submit' href="/postHistory/editForm/<%=post.id%>" class="btn btn-link">EDIT</a>
                 <% } %>
               <p><%=post.content%></p>
               <% if(!post.edited){%>
