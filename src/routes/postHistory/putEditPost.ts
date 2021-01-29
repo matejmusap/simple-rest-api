@@ -18,7 +18,6 @@ export default async function handlePutEditPost(
   const oldPostQuery = `SELECT * FROM "posts" WHERE "id"=${body.postId};`;
   const oldPostResponse = await client.responseToData(oldPostQuery);
   const oldPost = oldPostResponse[0];
-
   const query = `INSERT INTO "postHistory" (
     "userId",
     "postId",
@@ -28,14 +27,16 @@ export default async function handlePutEditPost(
               '${oldPost.createOrEditTime}',
               '${oldPost.content}')
               RETURNING id;`;
+  console.log(query);
 
   await client.runQuery(query);
+  console.log(query);
 
   const updatePostQuery = `UPDATE "posts" SET "content"='${body.content}', "edited"=true, "createOrEditTime"='${editTime}' WHERE "id"=${body.postId}`;
   await client.runQuery(updatePostQuery);
 
   res.cookie('userId', userId, { httpOnly: true });
-  return res.redirect(`/userHomepage/${userId}`);
+  return res.redirect(`/user/newsfeed/${userId}`);
 }
 
 export const swaggerPaths = {

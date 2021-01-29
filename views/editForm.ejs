@@ -1,10 +1,11 @@
 <%- include('./partials/header') %>
 
-<form id="body" action="postHistory/editPost?_method=PUT"  method="POST">
+<form id="body" action="/postHistory/editPost?_method=PUT"  method="POST">
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
     <input required type="text" class="form-control" value="<%=post.title%>" disabled>
   </div>
+    <input type ="hidden" id="postId" name ="postId" value="<%=post.id%>" />
   <div class="mb-3">
     <label for="content" class="form-label">Text</label>
     <input  type="textarea" class="form-control" id="content" name="content" value="<%=post.content%>"  required >
