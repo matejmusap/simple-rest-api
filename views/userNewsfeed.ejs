@@ -54,6 +54,7 @@
                 <p>Created: <%=post.createOrEditTime%></p>
                 <% } else {%>
                   <p>Edited: <%=post.createOrEditTime%></p>
+                  <a href="/postHistory/historyView/<%=post.id%>" class="btn btn-primary">Show history</a>
                   <% }%>
               <p>Author: <%=post.author%></p>
               <% if(!user.blocked) { %>

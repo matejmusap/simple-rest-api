@@ -1,5 +1,16 @@
 <%- include('./partials/header') %>
 <div class="checkEmail">
   <h1 >HistoryView</h1>
+  <h1><%=post.title%></h1>
+  <% if(postHistory && postHistory.length){%>
+    <% for(let edit of postHistory){%>
+      <h4><%=edit.author%></h4>
+      <h4><%=edit.lastEditTime%></h4>
+      <h4><%=edit.oldContent%></h4>
+      <% }%>
+
+    <% }%>
+  <a href="/user/newsfeed/<%=userId%>">Go Back</a>
+
 </div>
 <%- include('./partials/footer') %>

@@ -1,17 +1,36 @@
 import { Request, Response, NextFunction } from 'express';
+import { client } from '../../models';
 
 export default async function handleGetHistoryView(
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction
 ) {
-  const postId = 1;
-  return res.redirect(`/postHistory/historyView/${postId}`);
+  const postId = req.params.postId;
+  const userId = req.cookies['userId'];
+
+  const getPostQuerie = `SELECT * FROM "posts" WHERE "id"=${postId}`;
+  const postResponse = await client.responseToData(getPostQuerie);
+  const post = postResponse[0];
+
+  const getPostHistoryQueries = `SELECT * FROM "postHistory" WHERE "postId"=${postId}`;
+  const postHistory: any = await client.responseToData(getPostHistoryQueries);
+
+  for (let edit of postHistory) {
+    const getUserQuerie = `SELECT "username" FROM "users" WHERE "id"='${edit.userId}'`;
+    const userResponse = await client.responseToData(getUserQuerie);
+    const user = userResponse[0].username;
+    edit.author = user;
+  }
+
+  const renderBody = { postId, userId, postHistory, post };
+  res.cookie('userId', userId, { httpOnly: true });
+  return res.render(`historyView`, renderBody);
 }
 
 export const swaggerPaths = {
   tags: ['PostHistory'],
-  summary: 'Create PostHistory and update Post',
+  summary: 'Render history view',
   parameters: [
     {
       in: 'cookie',
@@ -26,7 +45,7 @@ export const swaggerPaths = {
       }
     },
     {
-      in: 'body',
+      in: 'path',
       name: 'postId',
       description: 'Unique post id',
       required: true,
@@ -34,18 +53,6 @@ export const swaggerPaths = {
         type: 'integer',
         value: 1,
         description: 'Unique post id',
-        default: null
-      }
-    },
-    {
-      in: 'body',
-      name: 'content',
-      description: 'Text of Post',
-      required: true,
-      schema: {
-        type: 'string',
-        value: 'Some text',
-        description: 'Text of post',
         default: null
       }
     }

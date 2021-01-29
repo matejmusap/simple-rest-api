@@ -103,6 +103,8 @@
       <p>Created: <%=post.createOrEditTime%></p>
       <% } else {%>
         <p>Edited: <%=post.createOrEditTime%></p>
+        <a href="/postHistory/historyView/<%=post.id%>" class="btn btn-primary">Show history</a>
+
         <% }%>
         <% if(!user.blocked) {%>
           <form id="body" action="/comments/new" method="POST">

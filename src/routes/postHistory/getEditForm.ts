@@ -12,12 +12,13 @@ export default async function handleGetEditForm(
   const postResponse: any = await client.responseToData(postQuery);
   const post = postResponse[0];
   const renderBody = { post, userId };
+  res.cookie('userId', userId, { httpOnly: true });
   return res.render(`editForm`, renderBody);
 }
 
 export const swaggerPaths = {
   tags: ['PostHistory'],
-  summary: 'Create PostHistory and update Post',
+  summary: 'Render edit Post form',
   parameters: [
     {
       in: 'cookie',
